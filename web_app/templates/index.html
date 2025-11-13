@@ -506,16 +506,40 @@
                 
                 <div class="columns-grid">
                     <div class="column-card">
-                        <h3>Contact Information</h3>
+                        <h3>👤 Contact Information</h3>
                         <div id="contactMappings" class="column-mapping"></div>
                     </div>
                     <div class="column-card">
-                        <h3>Location Details</h3>
+                        <h3>📍 Location Details</h3>
                         <div id="locationMappings" class="column-mapping"></div>
                     </div>
                     <div class="column-card">
-                        <h3>Additional Data</h3>
-                        <div id="additionalMappings" class="column-mapping"></div>
+                        <h3>📝 Notes & Tags</h3>
+                        <div id="notesMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>📅 Dates & Timeline</h3>
+                        <div id="datesMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>💼 Professional Info</h3>
+                        <div id="professionalMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>📱 Social Media</h3>
+                        <div id="socialMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>🏠 Property Search</h3>
+                        <div id="propertyMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>🏷️ MLS & Listings</h3>
+                        <div id="mlsMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>⚙️ Custom Fields</h3>
+                        <div id="customMappings" class="column-mapping"></div>
                     </div>
                 </div>
 
@@ -588,9 +612,15 @@
         const defaultMapping = {{ default_fub_cols | tojson }};
 
         const columnGroups = {
-            contact: ['first_name', 'last_name', 'email', 'secondary_email', 'phone', 'secondary_phone', 'source', 'assigned_to'],
-            location: ['street', 'city', 'state', 'zip'],
-            additional: ['tags', 'notes', 'search_criteria']
+            contact: ['first_name', 'last_name', 'email', 'secondary_email', 'phone', 'secondary_phone', 'source', 'assigned_to', 'stage', 'status'],
+            location: ['street', 'city', 'state', 'zip', 'county', 'country'],
+            notes: ['tags', 'notes', 'search_criteria'],
+            dates: ['created_date', 'modified_date', 'last_activity', 'birthday', 'anniversary'],
+            professional: ['company', 'title', 'website', 'spouse_name', 'occupation', 'employer'],
+            social: ['facebook', 'linkedin', 'twitter', 'instagram'],
+            property: ['home_price', 'price_min', 'price_max', 'beds_min', 'beds_max', 'baths_min', 'baths_max', 'property_type', 'square_feet', 'lot_size', 'year_built'],
+            mls: ['listing_id', 'mls_number'],
+            custom: ['custom_field_1', 'custom_field_2', 'custom_field_3']
         };
 
         // Drag and drop handlers
@@ -658,11 +688,23 @@
         function buildMappingUI() {
             const contactDiv = document.getElementById('contactMappings');
             const locationDiv = document.getElementById('locationMappings');
-            const additionalDiv = document.getElementById('additionalMappings');
+            const notesDiv = document.getElementById('notesMappings');
+            const datesDiv = document.getElementById('datesMappings');
+            const professionalDiv = document.getElementById('professionalMappings');
+            const socialDiv = document.getElementById('socialMappings');
+            const propertyDiv = document.getElementById('propertyMappings');
+            const mlsDiv = document.getElementById('mlsMappings');
+            const customDiv = document.getElementById('customMappings');
 
             contactDiv.innerHTML = '';
             locationDiv.innerHTML = '';
-            additionalDiv.innerHTML = '';
+            notesDiv.innerHTML = '';
+            datesDiv.innerHTML = '';
+            professionalDiv.innerHTML = '';
+            socialDiv.innerHTML = '';
+            propertyDiv.innerHTML = '';
+            mlsDiv.innerHTML = '';
+            customDiv.innerHTML = '';
 
             for (const [key, defaultValue] of Object.entries(defaultMapping)) {
                 const found = detectedColumns.includes(defaultValue);
@@ -688,12 +730,25 @@
                 row.appendChild(label);
                 row.appendChild(input);
                 
+                // Add to appropriate category
                 if (columnGroups.contact.includes(key)) {
                     contactDiv.appendChild(row);
                 } else if (columnGroups.location.includes(key)) {
                     locationDiv.appendChild(row);
-                } else {
-                    additionalDiv.appendChild(row);
+                } else if (columnGroups.notes.includes(key)) {
+                    notesDiv.appendChild(row);
+                } else if (columnGroups.dates.includes(key)) {
+                    datesDiv.appendChild(row);
+                } else if (columnGroups.professional.includes(key)) {
+                    professionalDiv.appendChild(row);
+                } else if (columnGroups.social.includes(key)) {
+                    socialDiv.appendChild(row);
+                } else if (columnGroups.property.includes(key)) {
+                    propertyDiv.appendChild(row);
+                } else if (columnGroups.mls.includes(key)) {
+                    mlsDiv.appendChild(row);
+                } else if (columnGroups.custom.includes(key)) {
+                    customDiv.appendChild(row);
                 }
             }
         }

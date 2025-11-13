@@ -4,13 +4,14 @@ __pycache__/
 web_app/uploads/
 web_app/downloads/
 *.log
+.DS_Store
 
 # Environment variables
 web_app/.env
 
 # CSV input and output files
 csv_input/*.csv
-csv_output/*.csv
+csv_output/*
 
 # Keep the directories but ignore CSV files
 !csv_input/.gitkeep

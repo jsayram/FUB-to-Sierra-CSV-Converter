@@ -56,8 +56,9 @@ SIERRA_COLS = [
     'Add to Import Note',
 ]
 
-# Default FUB column mapping
+# Default FUB column mapping (includes all available FUB fields)
 DEFAULT_FUB_COLS = {
+    # Core contact fields
     'first_name': 'First Name',
     'last_name': 'Last Name',
     'email': 'Email',
@@ -66,13 +67,66 @@ DEFAULT_FUB_COLS = {
     'secondary_phone': 'Secondary Phone',
     'source': 'Source',
     'assigned_to': 'Assigned To',
+    
+    # Address fields
     'street': 'Street',
     'city': 'City',
     'state': 'State',
     'zip': 'Zip',
+    'county': 'County',
+    'country': 'Country',
+    
+    # Notes and tags
     'tags': 'Tags',
     'notes': 'Notes',
     'search_criteria': 'Search Criteria',
+    
+    # Date fields
+    'created_date': 'Created Date',
+    'modified_date': 'Modified Date',
+    'last_activity': 'Last Activity',
+    'birthday': 'Birthday',
+    'anniversary': 'Anniversary',
+    
+    # Status and stage
+    'stage': 'Stage',
+    'status': 'Status',
+    
+    # Additional contact info
+    'company': 'Company',
+    'title': 'Title',
+    'website': 'Website',
+    'spouse_name': 'Spouse Name',
+    'occupation': 'Occupation',
+    'employer': 'Employer',
+    
+    # Social media
+    'facebook': 'Facebook',
+    'linkedin': 'LinkedIn',
+    'twitter': 'Twitter',
+    'instagram': 'Instagram',
+    
+    # Property search criteria
+    'home_price': 'Home Price',
+    'price_min': 'Price Min',
+    'price_max': 'Price Max',
+    'beds_min': 'Beds Min',
+    'beds_max': 'Beds Max',
+    'baths_min': 'Baths Min',
+    'baths_max': 'Baths Max',
+    'property_type': 'Property Type',
+    'square_feet': 'Square Feet',
+    'lot_size': 'Lot Size',
+    'year_built': 'Year Built',
+    
+    # MLS and listing info
+    'listing_id': 'Listing ID',
+    'mls_number': 'MLS Number',
+    
+    # Custom fields
+    'custom_field_1': 'Custom Field 1',
+    'custom_field_2': 'Custom Field 2',
+    'custom_field_3': 'Custom Field 3',
 }
 
 SIERRA_MAX_ROWS = 5000
@@ -129,15 +183,122 @@ def build_short_summary(row, fub_cols):
 
 
 def build_import_note(row, fub_cols):
-    """Combine search criteria and notes into import note field."""
+    """
+    Combine search criteria, notes, and all additional fields into import note field.
+    This captures all the extra data that doesn't fit in Sierra's fixed columns.
+    """
+    parts = []
+    
+    # Primary notes and criteria
     criteria = row.get(fub_cols.get('search_criteria', ''), '').strip()
     notes = row.get(fub_cols.get('notes', ''), '').strip()
     
-    parts = []
     if criteria:
         parts.append(f"Search Criteria: {criteria}")
     if notes:
         parts.append(f"Notes: {notes}")
+    
+    # Professional info
+    company = row.get(fub_cols.get('company', ''), '').strip()
+    title = row.get(fub_cols.get('title', ''), '').strip()
+    occupation = row.get(fub_cols.get('occupation', ''), '').strip()
+    employer = row.get(fub_cols.get('employer', ''), '').strip()
+    
+    prof_parts = []
+    if company:
+        prof_parts.append(f"Company: {company}")
+    if title:
+        prof_parts.append(f"Title: {title}")
+    if occupation:
+        prof_parts.append(f"Occupation: {occupation}")
+    if employer:
+        prof_parts.append(f"Employer: {employer}")
+    
+    if prof_parts:
+        parts.append("Professional Info: " + " | ".join(prof_parts))
+    
+    # Personal info
+    spouse = row.get(fub_cols.get('spouse_name', ''), '').strip()
+    birthday = row.get(fub_cols.get('birthday', ''), '').strip()
+    anniversary = row.get(fub_cols.get('anniversary', ''), '').strip()
+    
+    personal_parts = []
+    if spouse:
+        personal_parts.append(f"Spouse: {spouse}")
+    if birthday:
+        personal_parts.append(f"Birthday: {birthday}")
+    if anniversary:
+        personal_parts.append(f"Anniversary: {anniversary}")
+    
+    if personal_parts:
+        parts.append("Personal: " + " | ".join(personal_parts))
+    
+    # Property search preferences
+    price_min = row.get(fub_cols.get('price_min', ''), '').strip()
+    price_max = row.get(fub_cols.get('price_max', ''), '').strip()
+    beds_min = row.get(fub_cols.get('beds_min', ''), '').strip()
+    beds_max = row.get(fub_cols.get('beds_max', ''), '').strip()
+    baths_min = row.get(fub_cols.get('baths_min', ''), '').strip()
+    baths_max = row.get(fub_cols.get('baths_max', ''), '').strip()
+    property_type = row.get(fub_cols.get('property_type', ''), '').strip()
+    
+    search_parts = []
+    if price_min or price_max:
+        price_range = f"${price_min or '?'} - ${price_max or '?'}"
+        search_parts.append(f"Price: {price_range}")
+    if beds_min or beds_max:
+        beds_range = f"{beds_min or '?'}-{beds_max or '?'} beds"
+        search_parts.append(beds_range)
+    if baths_min or baths_max:
+        baths_range = f"{baths_min or '?'}-{baths_max or '?'} baths"
+        search_parts.append(baths_range)
+    if property_type:
+        search_parts.append(f"Type: {property_type}")
+    
+    if search_parts:
+        parts.append("Property Search: " + " | ".join(search_parts))
+    
+    # Social media
+    social_links = []
+    for platform in ['facebook', 'linkedin', 'twitter', 'instagram']:
+        link = row.get(fub_cols.get(platform, ''), '').strip()
+        if link:
+            social_links.append(f"{platform.title()}: {link}")
+    
+    if social_links:
+        parts.append("Social Media: " + " | ".join(social_links))
+    
+    # MLS/Listing info
+    listing_id = row.get(fub_cols.get('listing_id', ''), '').strip()
+    mls_number = row.get(fub_cols.get('mls_number', ''), '').strip()
+    
+    if listing_id:
+        parts.append(f"Listing ID: {listing_id}")
+    if mls_number:
+        parts.append(f"MLS#: {mls_number}")
+    
+    # Status/Stage info
+    stage = row.get(fub_cols.get('stage', ''), '').strip()
+    status = row.get(fub_cols.get('status', ''), '').strip()
+    
+    status_parts = []
+    if stage:
+        status_parts.append(f"Stage: {stage}")
+    if status:
+        status_parts.append(f"Status: {status}")
+    
+    if status_parts:
+        parts.append(" | ".join(status_parts))
+    
+    # Custom fields
+    custom_parts = []
+    for i in range(1, 4):
+        custom = row.get(fub_cols.get(f'custom_field_{i}', ''), '').strip()
+        if custom:
+            custom_parts.append(f"Custom {i}: {custom}")
+    
+    if custom_parts:
+        parts.append(" | ".join(custom_parts))
     
     return '\n\n'.join(parts)
 
