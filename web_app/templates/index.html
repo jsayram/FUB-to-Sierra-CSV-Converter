@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUB to Sierra CSV Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .upload-zone {
+            border: 3px dashed #667eea;
+            border-radius: 8px;
+            padding: 60px 20px;
+            text-align: center;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .upload-zone:hover {
+            background: #f0f2ff;
+            border-color: #764ba2;
+        }
+
+        .upload-zone.dragover {
+            background: #e8ebff;
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .upload-zone h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .upload-zone p {
+            color: #666;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .columns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .column-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .column-card h3 {
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .column-mapping {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mapping-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mapping-row label {
+            flex: 1;
+            font-size: 13px;
+            color: #495057;
+        }
+
+        .mapping-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .mapping-row input[type="text"] {
+            flex: 2;
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .console-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .console-output::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .console-output::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .console-line {
+            margin-bottom: 4px;
+        }
+
+        .console-line.success {
+            color: #4ec9b0;
+        }
+
+        .console-line.error {
+            color: #f48771;
+        }
+
+        .console-line.info {
+            color: #569cd6;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .download-section {
+            display: none;
+            background: #f8f9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .download-section.active {
+            display: block;
+        }
+
+        .download-files {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .download-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+
+        .file-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .file-size {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        .error-message {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 FUB to Sierra CSV Converter</h1>
+            <p>Convert Follow Up Boss exports to Sierra CRM format with automatic 5,000-row chunking</p>
+        </div>
+
+        <div class="content">
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message"></div>
+
+            <!-- Upload Zone -->
+            <div id="uploadZone" class="upload-zone">
+                <div class="upload-icon">📁</div>
+                <h2>Drop your FUB CSV file here</h2>
+                <p>or click to browse</p>
+                <input type="file" id="fileInput" accept=".csv">
+            </div>
+
+            <!-- Column Mapping Section -->
+            <div id="mappingSection" class="section hidden">
+                <h2 class="section-title">📋 Column Mapping</h2>
+                <p style="margin-bottom: 20px; color: #666;">
+                    Detected columns in your FUB export. Check the boxes for columns you want to include and verify the mapping names match your CSV headers.
+                </p>
+                
+                <div class="columns-grid">
+                    <div class="column-card">
+                        <h3>Contact Information</h3>
+                        <div id="contactMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>Location Details</h3>
+                        <div id="locationMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>Additional Data</h3>
+                        <div id="additionalMappings" class="column-mapping"></div>
+                    </div>
+                </div>
+
+                <button id="convertBtn" class="btn">Convert to Sierra Format</button>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px; color: #667eea;">Converting your file...</p>
+            </div>
+
+            <!-- Console Output -->
+            <div id="consoleSection" class="section hidden">
+                <h2 class="section-title">📟 Conversion Log</h2>
+                <div id="consoleOutput" class="console-output"></div>
+            </div>
+
+            <!-- Download Section -->
+            <div id="downloadSection" class="download-section">
+                <h2 class="section-title">✅ Conversion Complete!</h2>
+                <div id="downloadFiles" class="download-files"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const mappingSection = document.getElementById('mappingSection');
+        const convertBtn = document.getElementById('convertBtn');
+        const consoleSection = document.getElementById('consoleSection');
+        const consoleOutput = document.getElementById('consoleOutput');
+        const downloadSection = document.getElementById('downloadSection');
+        const downloadFiles = document.getElementById('downloadFiles');
+        const errorMessage = document.getElementById('errorMessage');
+        const loading = document.getElementById('loading');
+
+        let currentFile = null;
+        let detectedColumns = [];
+
+        const defaultMapping = {{ default_fub_cols | tojson }};
+
+        const columnGroups = {
+            contact: ['first_name', 'last_name', 'email', 'secondary_email', 'phone', 'secondary_phone', 'source', 'assigned_to'],
+            location: ['street', 'city', 'state', 'zip'],
+            additional: ['tags', 'notes', 'search_criteria']
+        };
+
+        // Drag and drop handlers
+        uploadZone.addEventListener('click', () => fileInput.click());
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        async function handleFileSelect(file) {
+            if (!file.name.endsWith('.csv')) {
+                showError('Please select a CSV file');
+                return;
+            }
+
+            currentFile = file;
+            hideError();
+
+            // Detect columns in the file
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/detect_columns', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    detectedColumns = result.columns;
+                    buildMappingUI();
+                    mappingSection.classList.remove('hidden');
+                    uploadZone.querySelector('h2').textContent = `File loaded: ${file.name}`;
+                    uploadZone.querySelector('p').textContent = 'Click to select a different file';
+                } else {
+                    showError(result.error);
+                }
+            } catch (error) {
+                showError('Error reading file: ' + error.message);
+            }
+        }
+
+        function buildMappingUI() {
+            const contactDiv = document.getElementById('contactMappings');
+            const locationDiv = document.getElementById('locationMappings');
+            const additionalDiv = document.getElementById('additionalMappings');
+
+            contactDiv.innerHTML = '';
+            locationDiv.innerHTML = '';
+            additionalDiv.innerHTML = '';
+
+            for (const [key, defaultValue] of Object.entries(defaultMapping)) {
+                const found = detectedColumns.includes(defaultValue);
+                
+                const row = document.createElement('div');
+                row.className = 'mapping-row';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `map_${key}`;
+                checkbox.checked = found;
+                
+                const label = document.createElement('label');
+                label.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `val_${key}`;
+                input.value = defaultValue;
+                input.placeholder = 'Column name in CSV';
+                
+                row.appendChild(checkbox);
+                row.appendChild(label);
+                row.appendChild(input);
+                
+                if (columnGroups.contact.includes(key)) {
+                    contactDiv.appendChild(row);
+                } else if (columnGroups.location.includes(key)) {
+                    locationDiv.appendChild(row);
+                } else {
+                    additionalDiv.appendChild(row);
+                }
+            }
+        }
+
+        convertBtn.addEventListener('click', async () => {
+            if (!currentFile) return;
+
+            // Build column mapping
+            const mapping = {};
+            for (const key of Object.keys(defaultMapping)) {
+                const checkbox = document.getElementById(`map_${key}`);
+                const input = document.getElementById(`val_${key}`);
+                if (checkbox.checked && input.value.trim()) {
+                    mapping[key] = input.value.trim();
+                }
+            }
+
+            // Show loading and console
+            loading.classList.add('active');
+            consoleSection.classList.remove('hidden');
+            downloadSection.classList.remove('active');
+            consoleOutput.innerHTML = '';
+            convertBtn.disabled = true;
+
+            // Upload and convert
+            const formData = new FormData();
+            formData.append('file', currentFile);
+            formData.append('column_mapping', JSON.stringify(mapping));
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Display logs
+                    result.logs.forEach(log => {
+                        addConsoleLog(log);
+                    });
+
+                    // Show download section
+                    displayDownloads(result.files);
+                    downloadSection.classList.add('active');
+                } else {
+                    showError(result.error + (result.details ? '\n\n' + result.details : ''));
+                    if (result.logs) {
+                        result.logs.forEach(log => addConsoleLog(log, 'error'));
+                    }
+                }
+            } catch (error) {
+                showError('Conversion failed: ' + error.message);
+                addConsoleLog('Error: ' + error.message, 'error');
+            } finally {
+                loading.classList.remove('active');
+                convertBtn.disabled = false;
+            }
+        });
+
+        function addConsoleLog(message, type = 'info') {
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = message;
+            consoleOutput.appendChild(line);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        function displayDownloads(files) {
+            downloadFiles.innerHTML = '';
+            
+            files.forEach(file => {
+                const fileDiv = document.createElement('div');
+                fileDiv.className = 'download-file';
+                
+                const info = document.createElement('div');
+                info.className = 'file-info';
+                
+                const name = document.createElement('div');
+                name.className = 'file-name';
+                name.textContent = file.filename;
+                
+                const size = document.createElement('div');
+                size.className = 'file-size';
+                size.textContent = `${file.rows} rows`;
+                
+                info.appendChild(name);
+                info.appendChild(size);
+                
+                const btn = document.createElement('button');
+                btn.className = 'download-btn';
+                btn.textContent = '⬇ Download';
+                btn.onclick = () => downloadFile(file.path);
+                
+                fileDiv.appendChild(info);
+                fileDiv.appendChild(btn);
+                downloadFiles.appendChild(fileDiv);
+            });
+        }
+
+        function downloadFile(path) {
+            window.location.href = `/download/${path}`;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('active');
+        }
+
+        function hideError() {
+            errorMessage.classList.remove('active');
+        }
+    </script>
+</body>
+</html>

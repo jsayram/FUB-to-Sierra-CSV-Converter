@@ -1,6 +1,6 @@
 # FUB to Sierra CSV Converter
 
-A Python tool that converts **Follow Up Boss** CSV exports into **Sierra CRM**-compatible CSV format.
+A Python tool that converts **Follow Up Boss** CSV exports into **Sierra CRM**-compatible CSV format. Available as both a **command-line tool** and a **web-based application**.
 
 ## 📋 What This Tool Does
 
@@ -52,9 +52,50 @@ source .env/bin/activate
 .\.env\Scripts\activate
 ```
 
-### 3. No External Dependencies Required
+### 3. Install Dependencies
 
-This tool uses **only Python standard library modules** (`csv`, `re`, `textwrap`, `pathlib`). No `pip install` needed!
+```bash
+pip install -r requirements.txt
+```
+
+This installs Flask and other required packages for the web application.
+
+```
+
+## 🌐 Web Application (Recommended)
+
+### Start the Web Server
+
+```bash
+python web_app/app.py
+```
+
+Then open your browser to: **http://localhost:5000**
+
+### Features
+
+- 🎯 **Drag & Drop** - Simply drag your FUB CSV file into the browser
+- ✅ **Visual Column Mapping** - Check/uncheck columns with a friendly UI
+- 📊 **Live Conversion Log** - Watch the conversion happen in real-time
+- 📦 **Automatic Chunking** - Files >5,000 rows split automatically for Sierra
+- ⬇️ **Instant Downloads** - Download converted files directly from the browser
+- 🚨 **Error Handling** - Clear error messages if something goes wrong
+
+### How to Use the Web App
+
+1. Start the server with `python web_app/app.py`
+2. Open http://localhost:5000 in your browser
+3. Drag and drop (or click to browse) your FUB CSV file
+4. Review detected columns and adjust mappings if needed
+5. Click "Convert to Sierra Format"
+6. Watch the conversion progress in the console
+7. Download your converted file(s)
+
+---
+
+## 💻 Command Line Tool
+
+For automated/scripted workflows, use the command-line version.
 
 ## ⚙️ Configuration (IMPORTANT!)
 
@@ -207,3 +248,36 @@ Separated by double line breaks for readability.
 ---
 
 **Ready to convert!** Place your FUB exports in `csv_input/` and run the script.
+
+---
+
+## 🌐 Quick Start - Web Application
+
+The easiest way to use this tool is through the web interface:
+
+1. **Start the server:**
+   ```bash
+   python web_app/app.py
+   ```
+
+2. **Open your browser to:**
+   ```
+   http://127.0.0.1:5001
+   ```
+
+3. **Use the app:**
+   - 🎯 Drag and drop your FUB CSV file
+   - ✅ Review and adjust column mappings
+   - 🔄 Click "Convert to Sierra Format"
+   - 📊 Watch real-time conversion progress
+   - ⬇️ Download your converted file(s)
+
+### Web App Features:
+- **Drag & Drop Interface** - No file picker needed, just drag your CSV
+- **Visual Column Mapping** - Check/uncheck columns with friendly UI
+- **Live Conversion Log** - Dark-themed console showing each row
+- **Automatic Chunking** - Files >5,000 rows split automatically
+- **Instant Downloads** - Download all chunks directly from browser
+- **Error Handling** - Clear error messages if something goes wrong
+
+**Access:** http://127.0.0.1:5001 (or http://localhost:5001)
