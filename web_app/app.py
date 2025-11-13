@@ -9,6 +9,9 @@ import os
 import csv
 import re
 import uuid
+import zipfile
+import io
+import time
 from pathlib import Path
 from textwrap import shorten
 from flask import Flask, render_template, request, jsonify, send_file, session
@@ -23,6 +26,7 @@ app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['UPLOAD_FOLDER'] = Path(__file__).parent / 'uploads'
 app.config['DOWNLOAD_FOLDER'] = Path(__file__).parent / 'downloads'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
+app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 31  # 31 days in seconds
 
 # Payment link configuration
 PAYMENT_LINK = os.getenv('PAYMENT_LINK')
@@ -283,8 +287,12 @@ def upload_file():
         # Clean up upload file
         upload_path.unlink()
         
-        # Store session_id for payment verification
+        # Store conversion data in session for persistent download access
         session['conversion_id'] = session_id
+        session['conversion_files'] = output_files
+        session['conversion_timestamp'] = int(time.time())
+        session['payment_completed'] = False  # Will be set to True after payment
+        session.permanent = True  # Make session last 31 days
         
         return jsonify({
             'success': True,
@@ -292,7 +300,8 @@ def upload_file():
             'files': output_files,
             'total_rows': total_rows,
             'preview': preview_data,
-            'preview_note': f'Showing first {len(preview_data)} of {total_rows} rows - Preview demonstrates format only'
+            'preview_note': f'Showing first {len(preview_data)} of {total_rows} rows - Preview demonstrates format only',
+            'session_id': session_id  # Send back for client-side tracking
         })
     
     except Exception as e:
@@ -371,6 +380,70 @@ def download_file(filename):
         )
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/download_zip')
+def download_zip():
+    """Download all converted files as a ZIP archive."""
+    try:
+        # Check if user has completed payment
+        if not session.get('payment_completed', False):
+            return jsonify({'error': 'Payment required'}), 403
+        
+        # Get files from session
+        conversion_files = session.get('conversion_files', [])
+        session_id = session.get('conversion_id')
+        
+        if not conversion_files:
+            return jsonify({'error': 'No files to download'}), 404
+        
+        # Create ZIP file in memory
+        memory_file = io.BytesIO()
+        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for file_info in conversion_files:
+                file_path = app.config['DOWNLOAD_FOLDER'] / file_info['path']
+                if file_path.exists():
+                    # Add file to ZIP with clean name (no session ID)
+                    zf.write(file_path, file_info['filename'])
+        
+        memory_file.seek(0)
+        
+        # Generate ZIP filename
+        zip_name = f"sierra_converted_{session_id}.zip"
+        
+        return send_file(
+            memory_file,
+            as_attachment=True,
+            download_name=zip_name,
+            mimetype='application/zip'
+        )
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/verify_payment')
+def verify_payment():
+    """Check if payment has been completed for this session."""
+    payment_completed = session.get('payment_completed', False)
+    conversion_files = session.get('conversion_files', [])
+    
+    return jsonify({
+        'payment_completed': payment_completed,
+        'has_files': len(conversion_files) > 0,
+        'files': conversion_files if payment_completed else []
+    })
+
+
+@app.route('/mark_payment_complete')
+def mark_payment_complete():
+    """Mark payment as complete (called when user returns from Stripe)."""
+    # In production, you'd verify this via webhook
+    # For now, we trust the URL parameter from Stripe redirect
+    if request.args.get('payment_success') == 'true':
+        session['payment_completed'] = True
+        return jsonify({'success': True})
+    return jsonify({'success': False})
 
 
 @app.route('/detect_columns', methods=['POST'])

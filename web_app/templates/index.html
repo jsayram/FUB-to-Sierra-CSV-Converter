@@ -593,29 +593,6 @@
             additional: ['tags', 'notes', 'search_criteria']
         };
 
-        // Check if user returned from successful payment
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('payment_success') === 'true') {
-            addConsoleLog('✅ Payment successful! Preparing your downloads...', 'success');
-            consoleSection.classList.remove('hidden');
-            
-            // Show download section if files were converted
-            const filesData = sessionStorage.getItem('convertedFiles');
-            if (filesData) {
-                const files = JSON.parse(filesData);
-                displayDownloads(files);
-                downloadSection.classList.add('active');
-                paymentNoticeInline.style.display = 'none';
-                sessionStorage.removeItem('convertedFiles');
-                
-                // Scroll to downloads
-                downloadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            
-            // Remove payment_success from URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-
         // Drag and drop handlers
         uploadZone.addEventListener('click', () => fileInput.click());
         
@@ -860,6 +837,63 @@
         function displayDownloads(files) {
             downloadFiles.innerHTML = '';
             
+            // If multiple files, add ZIP download button first
+            if (files.length > 1) {
+                const zipDiv = document.createElement('div');
+                zipDiv.className = 'download-file';
+                zipDiv.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                zipDiv.style.color = 'white';
+                zipDiv.style.border = 'none';
+                
+                const info = document.createElement('div');
+                info.className = 'file-info';
+                
+                const name = document.createElement('div');
+                name.className = 'file-name';
+                name.textContent = '📦 All Files (ZIP Archive)';
+                name.style.color = 'white';
+                
+                const size = document.createElement('div');
+                size.className = 'file-size';
+                const totalRows = files.reduce((sum, f) => sum + f.rows, 0);
+                size.textContent = `${files.length} files • ${totalRows.toLocaleString()} total rows`;
+                size.style.color = '#e0e7ff';
+                
+                info.appendChild(name);
+                info.appendChild(size);
+                
+                const btn = document.createElement('button');
+                btn.className = 'download-btn';
+                btn.textContent = '⬇ Download ZIP';
+                btn.style.background = 'white';
+                btn.style.color = '#667eea';
+                btn.onclick = () => {
+                    downloadZip();
+                    btn.textContent = '✓ Downloaded';
+                    btn.style.background = '#d1fae5';
+                    btn.style.color = '#065f46';
+                    setTimeout(() => {
+                        btn.textContent = '⬇ Download Again';
+                        btn.style.background = 'white';
+                        btn.style.color = '#667eea';
+                    }, 2000);
+                };
+                
+                zipDiv.appendChild(info);
+                zipDiv.appendChild(btn);
+                downloadFiles.appendChild(zipDiv);
+                
+                // Add separator
+                const separator = document.createElement('div');
+                separator.style.textAlign = 'center';
+                separator.style.margin = '15px 0';
+                separator.style.color = '#9ca3af';
+                separator.style.fontSize = '14px';
+                separator.textContent = '─── or download individually ───';
+                downloadFiles.appendChild(separator);
+            }
+            
+            // Individual file download buttons
             files.forEach(file => {
                 const fileDiv = document.createElement('div');
                 fileDiv.className = 'download-file';
@@ -895,11 +929,14 @@
                 fileDiv.appendChild(btn);
                 downloadFiles.appendChild(fileDiv);
             });
-            });
         }
 
         function downloadFile(path) {
             window.location.href = `/download/${path}`;
+        }
+
+        function downloadZip() {
+            window.location.href = '/download_zip';
         }
 
         function showError(message) {
@@ -909,6 +946,58 @@
 
         function hideError() {
             errorMessage.classList.remove('active');
+        }
+
+        // Check if user returned from successful payment (run after all functions defined)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('payment_success') === 'true') {
+            // Mark payment as complete on server
+            fetch('/mark_payment_complete?payment_success=true')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        addConsoleLog('✅ Payment verified! Loading your downloads...', 'success');
+                        consoleSection.classList.remove('hidden');
+                        
+                        // Verify payment and get files from server
+                        return fetch('/verify_payment');
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.payment_completed && data.has_files) {
+                        displayDownloads(data.files);
+                        downloadSection.classList.add('active');
+                        paymentNoticeInline.style.display = 'none';
+                        
+                        // Scroll to downloads
+                        downloadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        addConsoleLog('⚠️ No files found. Please upload and convert a file first.', 'error');
+                    }
+                })
+                .catch(error => {
+                    addConsoleLog('❌ Error verifying payment: ' + error.message, 'error');
+                });
+            
+            // Remove payment_success from URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+            // Check if user already has a paid session on page load
+            fetch('/verify_payment')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.payment_completed && data.has_files) {
+                        // User has already paid and has files - show downloads
+                        displayDownloads(data.files);
+                        downloadSection.classList.add('active');
+                        addConsoleLog('👋 Welcome back! Your files are ready to download. Be sure to not refresh or close this page until you have downloaded your files.', 'success');
+                        consoleSection.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.log('No existing session');
+                });
         }
     </script>
 </body>
