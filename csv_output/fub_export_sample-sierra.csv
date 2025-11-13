@@ -1,0 +1,270 @@
+First Name,Last Name,Full Name,Email,Secondary Email,Phone,Secondary Phone,Lead Source,Assigned Agent,Street Address,City,State,Zip Code,Tags,Short Summary,Add to Import Note
+John,Smith,John Smith,john.smith@email.com,j.smith@work.com,(555) 123-4567,(555) 987-6543,Zillow,Sarah Johnson,123 Main St,Austin,TX,78701,Hot Lead; First Time Buyer,"Source: Zillow | Location: Austin, TX","Search Criteria: 3 bed 2 bath downtown
+
+Notes: Very interested in downtown condos. Budget up to $500K."
+Maria,Garcia,Maria Garcia,maria.g@gmail.com,,(512) 555-0198,,Realtor.com,Mike Chen,456 Oak Avenue,San Antonio,TX,78201,Investor; Commercial,"Source: Realtor.com | Location: San Antonio, TX","Search Criteria: investment properties san antonio
+
+Notes: Looking for multi-family properties"
+,Johnson,Johnson,incomplete@email.com,,,,,,,,,,,,Notes: Missing first name test
+Robert,Lee,Robert Lee,robert.lee@yahoo.com,bob.lee@company.net,(512) 555-7890,(512) 555-9999,Facebook,Sarah Johnson,789 Pine Road,Dallas,TX,75201,Hot Lead,"Source: Facebook | Location: Dallas, TX","Search Criteria: luxury homes dallas
+
+Notes: Called twice. Very motivated buyer."
+Jennifer,,Jennifer,jen.contact@hotmail.com,,(512) 555-1111,,,Jane Doe,321 Elm Street,Houston,TX,77001,First Time Buyer; Pre-Approved,"Location: Houston, TX","Search Criteria: starter homes houston
+
+Notes: Has pre-approval letter from Wells Fargo"
+Michael,Williams,Michael Williams,m.williams@outlook.com,mike.w@personal.com,(555) 123-4567,(555) 765-4321,Google,Mike Chen,654 Maple Drive,Fort Worth,TX,76101,Relocating; Corporate,"Source: Google | Location: Fort Worth, TX","Search Criteria: 4 bed Fort Worth
+
+Notes: Moving from California for work. Needs quick close."
+Emily,Brown,Emily Brown,emily.brown@mail.com,,,(555) 234-5678,,Jane Doe,987 Cedar Lane,Arlington,TX,76010,Buyer; Seller,"Location: Arlington, TX","Search Criteria: family homes arlington
+
+Notes: Selling current home to upgrade"
+David,Jones,David Jones,david@example.com,djones@work.org,(555) 345-6789,(555) 456-7890,Trulia,Sarah Johnson,147 Birch Court,Plano,TX,75023,Hot Lead; Cash Buyer,"Source: Trulia | Location: Plano, TX","Search Criteria: move-in ready plano
+
+Notes: Has cash ready. Looking in north Dallas suburbs."
+,,,,no-data@test.com,,,Website,,,,,,,Source: Website,Notes: Empty fields test case
+Lisa,Martinez,Lisa Martinez,lisa.m@email.net,l.martinez@company.com,(512) 555-9876,(512) 555-0147,Referral,Mike Chen,258 Willow Way,Frisco,TX,75034,Luxury; High Net Worth,"Source: Referral | Location: Frisco, TX","Search Criteria: luxury estates frisco
+
+Notes: Budget $2M+. Interested in gated communities."
+James,Anderson,James Anderson,james.anderson@gmail.com,,(555) 123-9999,,Zillow,Jane Doe,369 Spruce Street,McKinney,TX,75069,First Time Buyer,"Source: Zillow | Location: McKinney, TX","Search Criteria: 3 bed McKinney schools
+
+Notes: Young couple expecting first child"
+Patricia,Taylor,Patricia Taylor,patricia.t@yahoo.com,pat.taylor@biz.com,(555) 987-1234,(555) 111-2222,Open House,Sarah Johnson,741 Ash Boulevard,Richardson,TX,75080,Hot Lead; Pre-Approved; Move-In Ready,"Source: Open House | Location: Richardson, TX","Search Criteria: quick close richardson
+
+Notes: Needs to move within 30 days. Job relocation."
+Christopher,Thomas,Christopher Thomas,chris.thomas@mail.com,,(555) 987-6543,,Cold Call,Mike Chen,852 Poplar Avenue,Garland,TX,75040,Warm Lead,"Source: Cold Call | Location: Garland, TX","Search Criteria: homes under 300k
+
+Notes: Interested but not ready to buy yet"
+Linda,Moore,Linda Moore,linda.moore@email.com,lmoore@work.net,(512) 555-8765,(512) 555-4321,Facebook,Jane Doe,963 Hickory Drive,Irving,TX,75060,Investor; Cash Buyer,"Source: Facebook | Location: Irving, TX","Search Criteria: fixer upper irving
+
+Notes: Looking for fix-and-flip opportunities"
+Mark,Jackson,Mark Jackson,mark.j@outlook.com,,,(555) 678-9012,555-234-5678,Realtor.com,Sarah Johnson,159 Magnolia Street,Grand Prairie,TX,75050,"Source: 555-234-5678 | Location: 159 Magnolia Street, Grand Prairie","Search Criteria: Moving from New York. Needs rental temporarily.
+
+Notes: Relocating"
+Barbara,White,Barbara White,barbara.white@gmail.com,b.white@personal.com,(512) 555-7890,(555) 345-6789,Zillow,Mike Chen,357 Dogwood Lane,Mesquite,TX,75149,Hot Lead; First Time Buyer; VA Loan,"Source: Zillow | Location: Mesquite, TX","Search Criteria: VA approved homes
+
+Notes: Military veteran using VA loan benefits"
+Daniel,Harris,Daniel Harris,daniel.h@email.net,,(555) 890-1234,,Website,Jane Doe,486 Sycamore Road,Carrollton,TX,75006,Buyer,"Source: Website | Location: Carrollton, TX","Search Criteria: single family carrollton
+
+Notes: Standard buyer inquiry"
+Nancy,Martin,Nancy Martin,nancy.martin@yahoo.com,nmartin@work.org,(555) 901-2345,(555) 678-9012,Google,Sarah Johnson,597 Juniper Court,Lewisville,TX,75029,Seller; Downsizing,"Source: Google | Location: Lewisville, TX","Search Criteria: condos lewisville
+
+Notes: Empty nesters looking to downsize"
+Kevin,Thompson,Kevin Thompson,kevin.t@mail.com,k.thompson@company.com,(555) 012-3456,(555) 890-1234,Trulia,Mike Chen,618 Hawthorn Way,Flower Mound,TX,75022,Luxury; Pool Required,"Source: Trulia | Location: Flower Mound, TX","Search Criteria: pool homes flower mound
+
+Notes: Must have pool and large backyard"
+Karen,Garcia,Karen Garcia,karen.garcia@email.com,,(512) 345-6789,,Referral,Jane Doe,729 Cottonwood Avenue,Denton,TX,76201,First Time Buyer; FHA,"Source: Referral | Location: Denton, TX","Search Criteria: FHA approved denton
+
+Notes: Using FHA loan program"
+Steven,Martinez,Steven Martinez,steven.m@gmail.com,steve.m@biz.net,(555) 234-6789,(555) 567-8901,Facebook,Sarah Johnson,830 Redwood Street,Allen,TX,75002,Hot Lead; Investor,"Source: Facebook | Location: Allen, TX","Search Criteria: rental properties allen
+
+Notes: Building rental portfolio"
+Betty,Robinson,Betty Robinson,betty.robinson@yahoo.com,b.robinson@work.com,(555) 345-7890,(555) 678-9012,Zillow,Mike Chen,941 Beech Boulevard,Wylie,TX,75098,Relocating; Job Transfer,"Source: Zillow | Location: Wylie, TX","Search Criteria: corporate relocation wylie
+
+Notes: Company paying for relocation"
+Edward,Clark,Edward Clark,edward.c@outlook.com,,,(512) 456-7890,555-789-0123,Cold Call,Jane Doe,152 Elm Circle,Rockwall,TX,75032,"Source: 555-789-0123 | Location: 152 Elm Circle, Rockwall","Search Criteria: Left voicemail. Awaiting callback.
+
+Notes: Warm Lead; Following Up"
+Dorothy,Rodriguez,Dorothy Rodriguez,dorothy.r@mail.com,d.rodriguez@personal.com,(512) 555-8901,(512) 555-1234,Open House,Sarah Johnson,263 Pine Plaza,Rowlett,TX,75088,Hot Lead; Cash Buyer; Quick Close,"Source: Open House | Location: Rowlett, TX","Search Criteria: as-is sales rowlett
+
+Notes: Needs to close in 2 weeks"
+Ronald,Lewis,Ronald Lewis,ronald.lewis@email.net,,(555) 456-8901,,Realtor.com,Mike Chen,374 Oak Terrace,The Colony,TX,75056,Buyer; Pre-Approved,"Source: Realtor.com | Location: The Colony, TX","Search Criteria: homes 350-400k
+
+Notes: Pre-approved up to $400K"
+Sarah,Lee,Sarah Lee,sarah.lee@gmail.com,slee@work.org,(555) 567-9012,(555) 890-1234,Website,Jane Doe,485 Maple Crossing,Little Elm,TX,75068,First Time Buyer; Young Professional,"Source: Website | Location: Little Elm, TX","Search Criteria: modern homes little elm
+
+Notes: Tech worker new to area"
+Joseph,Walker,Joseph Walker,joseph.w@yahoo.com,j.walker@company.net,(555) 678-0123,(555) 901-2345,Google,Sarah Johnson,596 Cedar Heights,Prosper,TX,75078,Luxury; Custom Build,"Source: Google | Location: Prosper, TX","Search Criteria: custom builders prosper
+
+Notes: Wants to build custom home on lot"
+Margaret,Hall,Margaret Hall,margaret.hall@mail.com,,(555) 678-9012,,Trulia,Mike Chen,607 Birch Valley,Celina,TX,75009,Hot Lead; Land Purchase,"Source: Trulia | Location: Celina, TX","Search Criteria: land for sale celina
+
+Notes: Looking to buy land for future build"
+Thomas,Allen,Thomas Allen,thomas.a@email.com,tallent@biz.com,(512) 567-9012,(512) 012-3456,Referral,Jane Doe,718 Willow Ridge,Frisco,TX,75035,Relocating; Military,"Source: Referral | Location: Frisco, TX","Search Criteria: homes near base
+
+Notes: Military family relocating to area"
+Jessica,Young,Jessica Young,jessica.young@outlook.com,j.young@work.net,(512) 678-0123,(512) 123-4567,Zillow,Sarah Johnson,829 Spruce Summit,McKinney,TX,75070,Investor; Multi-Family,"Source: Zillow | Location: McKinney, TX","Search Criteria: multi family mckinney
+
+Notes: Wants duplex or triplex"
+Charles,Hernandez,Charles Hernandez,charles.h@gmail.com,,,(512) 555-9012,,Facebook,Mike Chen,930 Ash Acres,Plano,TX,75024,"Location: 930 Ash Acres, Plano","Search Criteria: Attended first-time buyer seminar
+
+Notes: Buyer; First Time Buyer"
+Michelle,King,Michelle King,michelle.king@yahoo.com,m.king@personal.com,(555) 789-2345,(555) 234-5678,Open House,Jane Doe,141 Poplar Park,Allen,TX,75013,Hot Lead; Upgrade,"Source: Open House | Location: Allen, TX","Search Criteria: larger homes allen
+
+Notes: Selling starter home to upgrade"
+Matthew,Wright,Matthew Wright,matthew.wright@mail.net,,(555) 890-3456,,Cold Call,Sarah Johnson,252 Hickory Hills,Richardson,TX,75081,Warm Lead,"Source: Cold Call | Location: Richardson, TX","Search Criteria: future buyer
+
+Notes: Thinking about buying in 3-6 months"
+Ashley,Lopez,Ashley Lopez,ashley.l@email.com,a.lopez@company.org,(512) 555-0234,(512) 555-7890,Realtor.com,Mike Chen,363 Magnolia Manor,Garland,TX,75041,First Time Buyer; Student,"Source: Realtor.com | Location: Garland, TX","Search Criteria: condos for young professionals
+
+Notes: Recent college grad. First job."
+Amanda,Hill,Amanda Hill,amanda.hill@gmail.com,ahill@work.com,(555) 901-4567,(555) 345-6789,Website,Jane Doe,474 Dogwood Dell,Dallas,TX,75202,Luxury; High Rise,"Source: Website | Location: Dallas, TX","Search Criteria: luxury condos downtown dallas
+
+Notes: Wants downtown high-rise condo"
+Joshua,Scott,Joshua Scott,joshua.s@outlook.com,,(555) 012-5678,,Google,Sarah Johnson,585 Sycamore Square,Irving,TX,75061,Buyer; Veteran,"Source: Google | Location: Irving, TX","Search Criteria: VA homes irving
+
+Notes: Using VA loan benefits"
+Melissa,Green,Melissa Green,melissa.green@yahoo.com,m.green@biz.net,(555) 123-6789,(555) 456-7890,Trulia,Mike Chen,696 Juniper Junction,Grand Prairie,TX,75051,Hot Lead; Relocating,"Source: Trulia | Location: Grand Prairie, TX","Search Criteria: grand prairie tours
+
+Notes: Moving from Chicago. Wants tour next week."
+Donna,Adams,Donna Adams,donna.adams@mail.com,d.adams@work.org,(555) 123-4567,(555) 789-0123,Referral,Jane Doe,707 Hawthorn Harbor,Mesquite,TX,75150,Seller; Divorce,"Source: Referral | Location: Mesquite, TX","Search Criteria: quick sale mesquite
+
+Notes: Need to sell family home"
+Brian,Baker,Brian Baker,brian.b@email.net,,,(512) 234-6789,512-567-8901,Zillow,Sarah Johnson,818 Cottonwood Cove,Carrollton,TX,75007,"Source: 512-567-8901 | Location: 818 Cottonwood Cove, Carrollton","Search Criteria: Wants property for short-term rental
+
+Notes: Investor; Airbnb"
+Kimberly,Gonzalez,Kimberly Gonzalez,kimberly.g@gmail.com,k.gonzalez@personal.com,(512) 345-7890,(512) 678-9012,Facebook,Mike Chen,929 Redwood Run,Lewisville,TX,75030,First Time Buyer; Newlyweds,"Source: Facebook | Location: Lewisville, TX","Search Criteria: starter homes for couples
+
+Notes: Just married. Looking for first home."
+Jeffrey,Nelson,Jeffrey Nelson,jeffrey.nelson@yahoo.com,j.nelson@company.com,(512) 555-6789,(512) 555-9012,Open House,Jane Doe,130 Beech Bend,Flower Mound,TX,75023,Hot Lead; Pool,"Source: Open House | Location: Flower Mound, TX","Search Criteria: family homes with pool
+
+Notes: Must have pool for kids"
+Ryan,Carter,Ryan Carter,ryan.c@mail.net,,(555) 567-8901,,Cold Call,Sarah Johnson,241 Elm Estate,Denton,TX,76202,Warm Lead; Tire Kicker,"Source: Cold Call | Location: Denton, TX","Search Criteria: general inquiry
+
+Notes: Just browsing. Not serious yet."
+Deborah,Mitchell,Deborah Mitchell,deborah.mitchell@email.com,d.mitchell@work.net,(555) 678-9012,(555) 901-2345,Realtor.com,Mike Chen,352 Pine Pointe,Frisco,TX,75036,Buyer; Move-Up,"Source: Realtor.com | Location: Frisco, TX","Search Criteria: upgrade homes frisco
+
+Notes: Current homeowner looking to upgrade"
+Jason,Perez,Jason Perez,jason.p@outlook.com,jperez@biz.org,(512) 789-0123,(512) 234-5678,Website,Jane Doe,463 Oak Orchard,McKinney,TX,75071,Luxury; Wine Cellar,"Source: Website | Location: McKinney, TX","Search Criteria: luxury homes wine cellar
+
+Notes: Wants home with wine cellar"
+Stephanie,Roberts,Stephanie Roberts,stephanie.roberts@gmail.com,,(555) 890-1234,,Google,Sarah Johnson,574 Maple Meadow,Plano,TX,75025,First Time Buyer; Teacher,"Source: Google | Location: Plano, TX","Search Criteria: homes near schools
+
+Notes: School teacher looking for affordable home"
+Justin,Turner,Justin Turner,justin.t@yahoo.com,j.turner@work.com,(555) 901-2345,(555) 345-6789,Trulia,Mike Chen,685 Cedar Creek,Allen,TX,75014,Hot Lead; Investment,"Source: Trulia | Location: Allen, TX","Search Criteria: turnkey rentals allen
+
+Notes: Adding to rental portfolio"
+Nicole,Phillips,Nicole Phillips,nicole.phillips@mail.net,n.phillips@personal.com,(555) 012-3456,(555) 678-9012,Referral,Jane Doe,796 Birch Brook,Wylie,TX,75099,Relocating; Retirement,"Source: Referral | Location: Wylie, TX","Search Criteria: retirement communities
+
+Notes: Retiring and moving to Texas"
+Angela,Campbell,Angela Campbell,angela.c@email.com,,,(512) 555-1234,512-678-9012,Zillow,Sarah Johnson,807 Willow Wood,Rockwall,TX,75087,"Source: 512-678-9012 | Location: 807 Willow Wood, Rockwall","Search Criteria: Growing family needs more space
+
+Notes: Seller; Upsizing"
+Brandon,Parker,Brandon Parker,brandon.parker@gmail.com,b.parker@company.net,(512) 012-4567,(512) 456-7890,Facebook,Mike Chen,918 Spruce Springs,Rowlett,TX,75089,Buyer; Fixer Upper,"Source: Facebook | Location: Rowlett, TX","Search Criteria: fixer uppers rowlett
+
+Notes: Handy. Wants project home."
+Katherine,Evans,Katherine Evans,katherine.e@yahoo.com,k.evans@work.org,(512) 345-7890,(512) 890-1234,Open House,Jane Doe,129 Ash Arbor,The Colony,TX,75057,First Time Buyer; Millennial,"Source: Open House | Location: The Colony, TX","Search Criteria: home office space
+
+Notes: Young professional. Remote worker."
+Gary,Edwards,Gary Edwards,gary.edwards@mail.com,,(555) 678-9012,,Cold Call,Sarah Johnson,230 Poplar Place,Little Elm,TX,75069,Warm Lead; Maybe,"Source: Cold Call | Location: Little Elm, TX","Search Criteria: long term lead
+
+Notes: Might be interested next year"
+Rachel,Collins,Rachel Collins,rachel.c@outlook.net,r.collins@biz.com,(555) 789-0123,(555) 234-5678,Realtor.com,Mike Chen,341 Hickory Hollow,Prosper,TX,75079,Luxury; Smart Home,"Source: Realtor.com | Location: Prosper, TX","Search Criteria: smart homes prosper
+
+Notes: Wants fully automated smart home"
+Emma,Stewart,Emma Stewart,emma.stewart@gmail.com,estewart@work.net,(512) 890-1234,(512) 345-6789,Website,Jane Doe,452 Magnolia Mile,Celina,TX,75010,Hot Lead; Builder,"Source: Website | Location: Celina, TX","Search Criteria: new builds celina
+
+Notes: Looking at new construction"
+Aaron,Sanchez,Aaron Sanchez,aaron.s@email.net,,(555) 901-3456,,Google,Sarah Johnson,563 Dogwood Drive,Austin,TX,78702,Investor; Student Housing,"Source: Google | Location: Austin, TX","Search Criteria: student rentals austin
+
+Notes: Wants property near university"
+Tyler,Morris,Tyler Morris,tyler.morris@yahoo.com,t.morris@personal.com,(512) 555-2345,(512) 555-8901,Trulia,Mike Chen,674 Sycamore Street,San Antonio,TX,78202,Buyer; Historic,"Source: Trulia | Location: San Antonio, TX","Search Criteria: historic homes san antonio
+
+Notes: Interested in historic properties"
+Brittany,Rogers,Brittany Rogers,brittany.r@mail.net,b.rogers@company.org,(555) 123-4567,(555) 567-8901,Referral,Jane Doe,785 Juniper Lane,Dallas,TX,75203,First Time Buyer; Single,"Source: Referral | Location: Dallas, TX","Search Criteria: condos dallas single
+
+Notes: Single professional. Needs 1-2 bed."
+Zachary,Reed,Zachary Reed,zachary.reed@email.com,zreed@work.com,(555) 234-5678,(555) 678-9012,Zillow,Sarah Johnson,896 Hawthorn Highway,Houston,TX,77002,Hot Lead; Waterfront,"Source: Zillow | Location: Houston, TX","Search Criteria: waterfront houston
+
+Notes: Must have water view"
+Samantha,Cook,Samantha Cook,samantha.c@gmail.com,,(555) 345-6789,,Facebook,Mike Chen,907 Cottonwood Court,Fort Worth,TX,76102,Relocating; Divorce,"Source: Facebook | Location: Fort Worth, TX","Search Criteria: affordable fort worth
+
+Notes: Fresh start. Needs affordable home."
+Alexander,Morgan,Alexander Morgan,alexander.morgan@yahoo.com,a.morgan@biz.net,(512) 456-7890,(512) 789-0123,Open House,Jane Doe,118 Redwood Road,Arlington,TX,76011,Buyer; Assumable Loan,"Source: Open House | Location: Arlington, TX","Search Criteria: assumable loans arlington
+
+Notes: Interested in assumable mortgages"
+Danielle,Bell,Danielle Bell,danielle.b@mail.com,d.bell@work.org,(512) 555-7890,(512) 555-0123,Cold Call,Sarah Johnson,229 Beech Boulevard,Plano,TX,75026,Warm Lead; Skeptical,"Source: Cold Call | Location: Plano, TX","Search Criteria: market concerns
+
+Notes: Not sure about market timing"
+Kyle,Murphy,Kyle Murphy,kyle.murphy@outlook.com,,(512) 678-9012,,Realtor.com,Mike Chen,330 Elm End,Frisco,TX,75037,First Time Buyer; Engineer,"Source: Realtor.com | Location: Frisco, TX","Search Criteria: data driven buyer frisco
+
+Notes: Tech engineer. Analytical buyer."
+Megan,Bailey,Megan Bailey,megan.bailey@gmail.com,m.bailey@personal.com,(512) 901-2345,(512) 456-7890,Website,Jane Doe,441 Pine Path,McKinney,TX,75072,Luxury; Guest House,"Source: Website | Location: McKinney, TX","Search Criteria: guest house mckinney
+
+Notes: Wants property with guest house"
+Adam,Rivera,Adam Rivera,adam.r@email.net,arivera@company.com,(555) 890-2345,(555) 123-4567,Google,Sarah Johnson,552 Oak Oasis,Allen,TX,75015,Hot Lead; Lake Access,"Source: Google | Location: Allen, TX","Search Criteria: lake homes allen
+
+Notes: Wants lake access property"
+Lauren,Cooper,Lauren Cooper,lauren.cooper@yahoo.com,,(555) 901-3456,,Trulia,Mike Chen,663 Maple Mountain,Richardson,TX,75082,Investor; Section 8,"Source: Trulia | Location: Richardson, TX","Search Criteria: section 8 richardson
+
+Notes: Interested in Section 8 rentals"
+Jacob,Richardson,Jacob Richardson,jacob.r@mail.net,j.richardson@work.net,(555) 234-5678,(555) 890-1234,Referral,Jane Doe,774 Cedar Canyon,Garland,TX,75042,Buyer; Green Home,"Source: Referral | Location: Garland, TX","Search Criteria: green homes garland
+
+Notes: Wants energy-efficient home"
+Amber,Cox,Amber Cox,amber.cox@email.com,a.cox@biz.org,(512) 555-8901,(512) 555-3456,Zillow,Sarah Johnson,885 Birch Bay,Irving,TX,75062,First Time Buyer; Nurse,"Source: Zillow | Location: Irving, TX","Search Criteria: homes irving flexible showing
+
+Notes: Healthcare worker. Flexible schedule."
+Jonathan,Howard,Jonathan Howard,jonathan.h@gmail.com,jhoward@work.com,(512) 901-4567,(512) 234-5678,Facebook,Mike Chen,996 Willow Walk,Grand Prairie,TX,75052,Hot Lead; Acreage,"Source: Facebook | Location: Grand Prairie, TX","Search Criteria: acreage grand prairie
+
+Notes: Wants land with home. 5+ acres."
+Crystal,Ward,Crystal Ward,crystal.ward@yahoo.com,,,(512) 012-3456,512-567-8901,Open House,Jane Doe,107 Spruce Street,Mesquite,TX,75151,"Source: 512-567-8901 | Location: 107 Spruce Street, Mesquite","Search Criteria: Job promotion. Moving to Dallas area.
+
+Notes: Relocating; Promotion"
+Craig,Torres,Craig Torres,craig.t@mail.com,c.torres@personal.com,(555) 234-6789,(555) 678-9012,Cold Call,Sarah Johnson,218 Ash Avenue,Carrollton,TX,75008,Warm Lead; Undecided,"Source: Cold Call | Location: Carrollton, TX","Search Criteria: rent vs buy
+
+Notes: Considering buying vs renting"
+Heather,Peterson,Heather Peterson,heather.peterson@outlook.net,h.peterson@company.net,(555) 345-7890,(555) 789-0123,Realtor.com,Mike Chen,329 Poplar Plaza,Lewisville,TX,75031,Buyer; Townhouse,"Source: Realtor.com | Location: Lewisville, TX","Search Criteria: townhomes lewisville
+
+Notes: Prefers low-maintenance townhouse"
+Travis,Gray,Travis Gray,travis.gray@email.com,,(512) 456-8901,,Website,Jane Doe,430 Hickory Heights,Flower Mound,TX,75024,First Time Buyer; Chef,"Source: Website | Location: Flower Mound, TX","Search Criteria: chef kitchen flower mound
+
+Notes: Wants gourmet kitchen"
+Monica,Ramirez,Monica Ramirez,monica.r@gmail.com,m.ramirez@work.org,(512) 555-9012,(512) 555-2345,Google,Sarah Johnson,541 Magnolia Mews,Denton,TX,76203,Hot Lead; Dual Income,"Source: Google | Location: Denton, TX","Search Criteria: dink buyers denton
+
+Notes: High earning couple. No kids."
+Jeremy,James,Jeremy James,jeremy.james@yahoo.com,j.james@biz.com,(555) 678-0123,(555) 901-2345,Trulia,Mike Chen,652 Dogwood Downs,Frisco,TX,75038,Luxury; Theater Room,"Source: Trulia | Location: Frisco, TX","Search Criteria: media room homes frisco
+
+Notes: Must have home theater"
+Diana,Watson,Diana Watson,diana.watson@mail.net,,(555) 789-0123,,Referral,Jane Doe,763 Sycamore Shores,McKinney,TX,75073,Investor; Flip,"Source: Referral | Location: McKinney, TX","Search Criteria: flip opportunities mckinney
+
+Notes: Experienced house flipper"
+Austin,Brooks,Austin Brooks,austin.b@email.com,a.brooks@work.com,(512) 023-4567,(512) 678-9012,Zillow,Sarah Johnson,874 Juniper Grove,Plano,TX,75027,Buyer; Basement,"Source: Zillow | Location: Plano, TX","Search Criteria: basement homes plano
+
+Notes: Wants home with basement (rare in TX)"
+Courtney,Kelly,Courtney Kelly,courtney.kelly@gmail.com,c.kelly@personal.net,(555) 345-7890,(555) 789-0123,Facebook,Mike Chen,985 Hawthorn Heights,Allen,TX,75016,First Time Buyer; Artist,"Source: Facebook | Location: Allen, TX","Search Criteria: artist studio allen
+
+Notes: Home studio space needed"
+Sean,Sanders,Sean Sanders,sean.sanders@yahoo.com,,(512) 555-0123,,Open House,Jane Doe,196 Cottonwood Circle,Wylie,TX,75100,Hot Lead; Golf Course,"Source: Open House | Location: Wylie, TX","Search Criteria: golf homes wylie
+
+Notes: Wants golf course community"
+Patricia,Price,Patricia Price,patricia.price@mail.com,p.price@company.org,(512) 567-8901,(512) 890-1234,Cold Call,Sarah Johnson,207 Redwood Ridge,Rockwall,TX,75032,Warm Lead; Budget Concerns,"Source: Cold Call | Location: Rockwall, TX","Search Criteria: first time buyer assistance
+
+Notes: Worried about affordability"
+Jordan,Bennett,Jordan Bennett,jordan.b@outlook.net,jbennett@work.net,(512) 890-1234,(512) 345-6789,Realtor.com,Mike Chen,318 Beech Bluff,Rowlett,TX,75088,Buyer; In-Law Suite,"Source: Realtor.com | Location: Rowlett, TX","Search Criteria: multi gen homes rowlett
+
+Notes: Needs in-law suite or mother-in-law plan"
+Vanessa,Wood,Vanessa Wood,vanessa.wood@email.com,,(555) 901-4567,,Website,Jane Doe,429 Elm Estates,The Colony,TX,75058,First Time Buyer; Photographer,"Source: Website | Location: The Colony, TX","Search Criteria: home office colony
+
+Notes: Home office for photography business"
+Eric,Barnes,Eric Barnes,eric.barnes@gmail.com,e.barnes@biz.com,(555) 012-6789,(555) 456-7890,Google,Sarah Johnson,530 Pine Peak,Little Elm,TX,75070,Luxury; Gated,"Source: Google | Location: Little Elm, TX","Search Criteria: gated little elm
+
+Notes: Must be in gated community"
+Cynthia,Ross,Cynthia Ross,cynthia.r@yahoo.com,c.ross@work.org,(555) 345-6789,(555) 901-2345,Trulia,Mike Chen,641 Oak Overlook,Prosper,TX,75080,Hot Lead; RV Parking,"Source: Trulia | Location: Prosper, TX","Search Criteria: rv parking prosper
+
+Notes: Needs RV parking space"
+Gregory,Henderson,Gregory Henderson,gregory.henderson@mail.net,,(512) 567-9012,,Referral,Jane Doe,752 Maple Meadows,Celina,TX,75011,Investor; Commercial,"Source: Referral | Location: Celina, TX","Search Criteria: commercial celina
+
+Notes: Looking at commercial properties"
+Shannon,Coleman,Shannon Coleman,shannon.c@email.com,s.coleman@personal.com,(512) 901-2345,(512) 567-8901,Zillow,Sarah Johnson,863 Cedar Crest,Austin,TX,78703,Buyer; Walkable,"Source: Zillow | Location: Austin, TX","Search Criteria: walkable austin
+
+Notes: Wants walkable neighborhood"
+Dennis,Jenkins,Dennis Jenkins,dennis.jenkins@gmail.com,djenkins@company.net,(512) 123-5678,(512) 456-7890,Facebook,Mike Chen,974 Birch Blvd,San Antonio,TX,78203,First Time Buyer; Veteran; Purple Heart,"Source: Facebook | Location: San Antonio, TX","Search Criteria: accessible homes san antonio
+
+Notes: Disabled veteran. Accessible home needed."
+Lisa,Perry,Lisa Perry,lisa.perry@yahoo.com,,,(512) 555-8901,512-901-2345,Open House,Jane Doe,185 Willow Way,Dallas,TX,75204,"Source: 512-901-2345 | Location: 185 Willow Way, Dallas","Search Criteria: Wants quiet cul-de-sac location
+
+Notes: Hot Lead; Cul-de-sac"
+Randy,Powell,Randy Powell,randy.p@mail.com,r.powell@work.com,(555) 678-9012,(555) 234-5678,Cold Call,Sarah Johnson,296 Spruce Summit,Houston,TX,77003,Warm Lead; Comparing,"Source: Cold Call | Location: Houston, TX","Search Criteria: price comparison houston
+
+Notes: Shopping multiple agents"
+Janet,Long,Janet Long,janet.long@outlook.net,j.long@biz.net,(555) 789-0123,(555) 345-6789,Realtor.com,Mike Chen,307 Ash Arbor,Fort Worth,TX,76103,Buyer; Horse Property,"Source: Realtor.com | Location: Fort Worth, TX","Search Criteria: equestrian properties fort worth
+
+Notes: Needs land for horses"
+Frank,Patterson,Frank Patterson,frank.patterson@email.com,,(512) 890-2345,,Website,Jane Doe,418 Poplar Pointe,Arlington,TX,76012,First Time Buyer; Firefighter,"Source: Website | Location: Arlington, TX","Search Criteria: first responder arlington
+
+Notes: Public servant. First responder discount?"
+Carolyn,Hughes,Carolyn Hughes,carolyn.h@gmail.com,c.hughes@work.org,(512) 123-4567,(512) 789-0123,Google,Sarah Johnson,529 Hickory Hill,Plano,TX,75028,Luxury; Wine Country,"Source: Google | Location: Plano, TX","Search Criteria: wine country homes
+
+Notes: Interested in Texas wine country"
+Scott,Flores,Scott Flores,scott.flores@yahoo.com,s.flores@personal.net,(555) 012-3456,(555) 567-8901,Trulia,Mike Chen,630 Magnolia Mall,Frisco,TX,75039,Hot Lead; New Build; Warranty,"Source: Trulia | Location: Frisco, TX","Search Criteria: new builds warranty frisco
+
+Notes: Only wants new construction with warranty"
