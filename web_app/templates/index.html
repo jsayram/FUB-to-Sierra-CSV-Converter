@@ -48,6 +48,48 @@
             padding: 30px;
         }
 
+        /* Payment Notice Styles */
+        .payment-notice {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .payment-notice.active {
+            display: block;
+        }
+
+        .payment-notice h3 {
+            margin-top: 0;
+            color: #92400e;
+            margin-bottom: 12px;
+        }
+
+        .payment-notice p {
+            color: #78350f;
+            margin: 10px 0;
+        }
+
+        .payment-link {
+            display: inline-block;
+            background-color: #2c5282;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .payment-link:hover {
+            background-color: #2a4365;
+            transform: translateY(-1px);
+        }
+
         .upload-zone {
             border: 3px dashed #667eea;
             border-radius: 8px;
@@ -328,6 +370,14 @@
         </div>
 
         <div class="content">
+            <!-- Payment Notice -->
+            <div id="paymentNotice" class="payment-notice">
+                <h3>⚠️ Payment Required</h3>
+                <p>To convert your FUB export to Sierra format, please complete payment first.</p>
+                <a href="{{ payment_link }}" target="_blank" class="payment-link">Complete Payment</a>
+                <p style="margin-top: 15px; font-size: 14px;">After completing payment, return here and upload your file.</p>
+            </div>
+
             <!-- Error Message -->
             <div id="errorMessage" class="error-message"></div>
 
@@ -385,6 +435,7 @@
     </div>
 
     <script>
+        const paymentNotice = document.getElementById('paymentNotice');
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
         const mappingSection = document.getElementById('mappingSection');
@@ -398,6 +449,7 @@
 
         let currentFile = null;
         let detectedColumns = [];
+        let paymentCompleted = false;
 
         const defaultMapping = {{ default_fub_cols | tojson }};
 
@@ -406,6 +458,17 @@
             location: ['street', 'city', 'state', 'zip'],
             additional: ['tags', 'notes', 'search_criteria']
         };
+
+        // Check if user returned from successful payment
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('payment_success') === 'true') {
+            paymentCompleted = true;
+            addConsoleLog('✅ Payment successful!', 'success');
+            consoleSection.classList.remove('hidden');
+            
+            // Remove payment_success from URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
 
         // Drag and drop handlers
         uploadZone.addEventListener('click', () => fileInput.click());
@@ -513,15 +576,41 @@
         }
 
         convertBtn.addEventListener('click', async () => {
-            if (!currentFile) return;
+            if (!currentFile) {
+                showError('Please select a file first');
+                return;
+            }
+
+            // Check if payment completed
+            if (!paymentCompleted) {
+                // Show payment notice
+                paymentNotice.classList.add('active');
+                addConsoleLog('⚠️ Payment required to proceed', 'error');
+                addConsoleLog('Click the payment link above to complete your purchase', 'info');
+                consoleSection.classList.remove('hidden');
+                
+                // Scroll to payment notice
+                paymentNotice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // Payment completed, proceed with conversion
+            await processConversion();
+        });
+
+        async function processConversion() {
+            if (!currentFile) {
+                showError('Please select a file first');
+                return;
+            }
 
             // Build column mapping
-            const mapping = {};
-            for (const key of Object.keys(defaultMapping)) {
+            const columnMapping = {};
+            for (const [key, defaultValue] of Object.entries(defaultMapping)) {
                 const checkbox = document.getElementById(`map_${key}`);
                 const input = document.getElementById(`val_${key}`);
-                if (checkbox.checked && input.value.trim()) {
-                    mapping[key] = input.value.trim();
+                if (checkbox && checkbox.checked && input) {
+                    columnMapping[key] = input.value;
                 }
             }
 
@@ -535,7 +624,7 @@
             // Upload and convert
             const formData = new FormData();
             formData.append('file', currentFile);
-            formData.append('column_mapping', JSON.stringify(mapping));
+            formData.append('column_mapping', JSON.stringify(columnMapping));
 
             try {
                 const response = await fetch('/upload', {
@@ -567,7 +656,7 @@
                 loading.classList.remove('active');
                 convertBtn.disabled = false;
             }
-        });
+        }
 
         function addConsoleLog(message, type = 'info') {
             const line = document.createElement('div');

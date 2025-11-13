@@ -287,10 +287,40 @@ def main():
         print("Please add Follow Up Boss CSV exports to the csv_input/ folder.")
         return
     
-    print(f"Found {len(csv_files)} CSV file(s) to process...\n")
+    print(f"Found {len(csv_files)} CSV file(s):\n")
     
-    # Process each file
-    for input_path in csv_files:
+    # List files with numbers
+    for idx, file_path in enumerate(csv_files, 1):
+        print(f"  {idx}. {file_path.name}")
+    
+    print(f"\n  0. Process ALL files")
+    
+    # Get user choice
+    while True:
+        try:
+            choice = input(f"\nSelect file to process (0-{len(csv_files)}): ").strip()
+            choice_num = int(choice)
+            
+            if choice_num == 0:
+                # Process all files
+                files_to_process = csv_files
+                break
+            elif 1 <= choice_num <= len(csv_files):
+                # Process single file
+                files_to_process = [csv_files[choice_num - 1]]
+                break
+            else:
+                print(f"Please enter a number between 0 and {len(csv_files)}")
+        except ValueError:
+            print("Please enter a valid number")
+        except KeyboardInterrupt:
+            print("\n\nCancelled by user.")
+            return
+    
+    print(f"\nProcessing {len(files_to_process)} file(s)...\n")
+    
+    # Process selected file(s)
+    for input_path in files_to_process:
         try:
             print(f"\n{'='*60}")
             print(f"Processing: {input_path.name}")

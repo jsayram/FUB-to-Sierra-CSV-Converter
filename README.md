@@ -60,26 +60,63 @@ pip install -r requirements.txt
 
 This installs Flask and other required packages for the web application.
 
+### 4. Configure Payment Link (Web App Only)
+
+To monetize your web application:
+
+```bash
+cp web_app/.env.example web_app/.env
 ```
 
-## 🌐 Web Application (Recommended)
+Then edit `web_app/.env` and add your Stripe payment link:
 
-### Start the Web Server
+1. Create a payment link at https://dashboard.stripe.com/payment-links
+2. Set product name: "FUB to Sierra CSV Conversion"
+3. Set price: $9.99 (or your preferred amount)
+4. Copy the payment link URL
+5. Paste it into `web_app/.env`:
+   ```
+   PAYMENT_LINK=https://buy.stripe.com/test_xxxxxxxxxxxxx
+   SECRET_KEY=your-generated-secret-key
+   ```
 
+See `STRIPE_SETUP.md` for detailed instructions.
+
+```
+
+### Web Application
+
+1. Configure payment link (see STRIPE_SETUP.md):
+```bash
+cp web_app/.env.example web_app/.env
+# Add your Stripe payment link to web_app/.env
+```
+
+2. Start the Flask server:
 ```bash
 python web_app/app.py
 ```
 
-Then open your browser to: **http://localhost:5000**
+3. Open your browser to `http://127.0.0.1:5001`
 
-### Features
+4. **Features:**
+   - 🎯 Drag-and-drop file upload
+   - 📋 Interactive column mapping
+   - 📟 Real-time conversion logs
+   - 💳 **Payment link integration** - Monetize with Stripe ($9.99 per conversion)
+   - ⬇️ Automatic download of converted files
+   - 📦 Handles large files with automatic chunking (5,000 rows max per file)
 
-- 🎯 **Drag & Drop** - Simply drag your FUB CSV file into the browser
-- ✅ **Visual Column Mapping** - Check/uncheck columns with a friendly UI
-- 📊 **Live Conversion Log** - Watch the conversion happen in real-time
-- 📦 **Automatic Chunking** - Files >5,000 rows split automatically for Sierra
-- ⬇️ **Instant Downloads** - Download converted files directly from the browser
-- 🚨 **Error Handling** - Clear error messages if something goes wrong
+### How the Payment System Works
+
+When users attempt to convert a file:
+
+1. A payment notice appears with your Stripe payment link
+2. Users click the link and complete payment on Stripe's secure checkout
+3. After payment, users return and can upload/convert their file
+4. No credit card data touches your server - Stripe handles everything
+
+**Note:** You can skip payment setup for free conversions. Just don't configure the payment link.
 
 ### How to Use the Web App
 
@@ -278,6 +315,9 @@ The easiest way to use this tool is through the web interface:
 - **Live Conversion Log** - Dark-themed console showing each row
 - **Automatic Chunking** - Files >5,000 rows split automatically
 - **Instant Downloads** - Download all chunks directly from browser
+- **💳 Stripe Payment Integration** - Monetize conversions with payment links
 - **Error Handling** - Clear error messages if something goes wrong
 
 **Access:** http://127.0.0.1:5001 (or http://localhost:5001)
+
+**Payment:** Configure a Stripe payment link in `web_app/.env` to charge $9.99 per conversion (see `STRIPE_SETUP.md`)
