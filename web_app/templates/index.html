@@ -360,6 +360,122 @@
         .hidden {
             display: none;
         }
+
+        /* Preview Table Styles */
+        .preview-section {
+            background: #f8f9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .preview-section.active {
+            display: block;
+        }
+
+        .preview-watermark {
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            max-height: 600px;
+            overflow: auto;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+        }
+
+        .preview-watermark::before {
+            content: 'PREVIEW ONLY - PAY TO DOWNLOAD FULL FILE';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 36px;
+            font-weight: bold;
+            color: rgba(255, 0, 0, 0.08);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            position: relative;
+        }
+
+        .preview-table th,
+        .preview-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .preview-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            filter: none;
+        }
+
+        .preview-table td {
+            filter: blur(0.3px);
+            opacity: 0.85;
+        }
+
+        .preview-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .preview-table tr:hover td {
+            background: #e9ecef;
+        }
+
+        .preview-note {
+            text-align: center;
+            color: #dc3545;
+            font-weight: 600;
+            margin: 15px 0;
+            padding: 12px;
+            background: #fff3cd;
+            border-radius: 4px;
+            user-select: none;
+            border: 2px solid #f59e0b;
+        }
+
+        .preview-scroll-hint {
+            text-align: center;
+            color: #6c757d;
+            font-size: 12px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .preview-watermark::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .preview-watermark::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .preview-watermark::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 6px;
+        }
+
+        .preview-watermark::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
     </style>
 </head>
 <body>
@@ -370,14 +486,6 @@
         </div>
 
         <div class="content">
-            <!-- Payment Notice -->
-            <div id="paymentNotice" class="payment-notice">
-                <h3>⚠️ Payment Required</h3>
-                <p>To convert your FUB export to Sierra format, please complete payment first.</p>
-                <a href="{{ payment_link }}" target="_blank" class="payment-link">Complete Payment</a>
-                <p style="margin-top: 15px; font-size: 14px;">After completing payment, return here and upload your file.</p>
-            </div>
-
             <!-- Error Message -->
             <div id="errorMessage" class="error-message"></div>
 
@@ -426,16 +534,39 @@
                 <div id="consoleOutput" class="console-output"></div>
             </div>
 
+            <!-- Preview Section -->
+            <div id="previewSection" class="preview-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 class="section-title" style="margin: 0;">👁️ Data Preview (First 10 Rows)</h2>
+                    
+                    <!-- Payment Notice Inline -->
+                    <div id="paymentNoticeInline" class="payment-notice" style="display: none; margin: 0; padding: 15px 20px; flex-shrink: 0; max-width: 400px;">
+                        <h3 style="font-size: 16px; margin-bottom: 8px;">💳 Ready to Download?</h3>
+                        <a href="{{ payment_link }}" target="_blank" class="payment-link" style="font-size: 14px; padding: 10px 20px;">Complete Payment & Download</a>
+                    </div>
+                </div>
+                
+                <p class="preview-note">⚠️ Preview showing data format - Complete payment to download the FULL, high-quality CSV file with all rows</p>
+                <div class="preview-watermark">
+                    <table id="previewTable" class="preview-table"></table>
+                </div>
+                <p class="preview-scroll-hint">💡 Scroll horizontally and vertically to see all columns and rows</p>
+            </div>
+
             <!-- Download Section -->
             <div id="downloadSection" class="download-section">
-                <h2 class="section-title">✅ Conversion Complete!</h2>
+                <h2 class="section-title">✅ Download Your Converted Files</h2>
+                <p style="color: #28a745; font-weight: 600; margin-bottom: 15px;">🎉 Payment successful! Your files are ready to download below:</p>
                 <div id="downloadFiles" class="download-files"></div>
+                <p style="margin-top: 15px; color: #6c757d; font-size: 14px;">
+                    💾 Click the download buttons above to save your Sierra CRM-formatted CSV files. 
+                    Import these files directly into Sierra CRM.
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        const paymentNotice = document.getElementById('paymentNotice');
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
         const mappingSection = document.getElementById('mappingSection');
@@ -446,10 +577,13 @@
         const downloadFiles = document.getElementById('downloadFiles');
         const errorMessage = document.getElementById('errorMessage');
         const loading = document.getElementById('loading');
+        const previewSection = document.getElementById('previewSection');
+        const previewTable = document.getElementById('previewTable');
+        const paymentNoticeInline = document.getElementById('paymentNoticeInline');
 
         let currentFile = null;
         let detectedColumns = [];
-        let paymentCompleted = false;
+        let convertedFiles = null;
 
         const defaultMapping = {{ default_fub_cols | tojson }};
 
@@ -462,9 +596,21 @@
         // Check if user returned from successful payment
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('payment_success') === 'true') {
-            paymentCompleted = true;
-            addConsoleLog('✅ Payment successful!', 'success');
+            addConsoleLog('✅ Payment successful! Preparing your downloads...', 'success');
             consoleSection.classList.remove('hidden');
+            
+            // Show download section if files were converted
+            const filesData = sessionStorage.getItem('convertedFiles');
+            if (filesData) {
+                const files = JSON.parse(filesData);
+                displayDownloads(files);
+                downloadSection.classList.add('active');
+                paymentNoticeInline.style.display = 'none';
+                sessionStorage.removeItem('convertedFiles');
+                
+                // Scroll to downloads
+                downloadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
             
             // Remove payment_success from URL
             window.history.replaceState({}, document.title, window.location.pathname);
@@ -581,20 +727,7 @@
                 return;
             }
 
-            // Check if payment completed
-            if (!paymentCompleted) {
-                // Show payment notice
-                paymentNotice.classList.add('active');
-                addConsoleLog('⚠️ Payment required to proceed', 'error');
-                addConsoleLog('Click the payment link above to complete your purchase', 'info');
-                consoleSection.classList.remove('hidden');
-                
-                // Scroll to payment notice
-                paymentNotice.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return;
-            }
-
-            // Payment completed, proceed with conversion
+            // Proceed with conversion (no payment required yet)
             await processConversion();
         });
 
@@ -618,6 +751,8 @@
             loading.classList.add('active');
             consoleSection.classList.remove('hidden');
             downloadSection.classList.remove('active');
+            paymentNoticeInline.style.display = 'none';
+            previewSection.classList.remove('active');
             consoleOutput.innerHTML = '';
             convertBtn.disabled = true;
 
@@ -640,9 +775,24 @@
                         addConsoleLog(log);
                     });
 
-                    // Show download section
-                    displayDownloads(result.files);
-                    downloadSection.classList.add('active');
+                    // Display preview table
+                    if (result.preview && result.preview.length > 0) {
+                        displayPreview(result.preview, result.preview_note);
+                    }
+
+                    // Save files data and show payment notice
+                    convertedFiles = result.files;
+                    sessionStorage.setItem('convertedFiles', JSON.stringify(result.files));
+                    
+                    addConsoleLog('', 'info');
+                    addConsoleLog('✅ Conversion complete!', 'success');
+                    addConsoleLog('💳 Review the preview below, then complete payment to download your files', 'info');
+                    
+                    // Show payment notice next to preview
+                    paymentNoticeInline.style.display = 'block';
+                    
+                    // Scroll to preview
+                    previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 } else {
                     showError(result.error + (result.details ? '\n\n' + result.details : ''));
                     if (result.logs) {
@@ -666,6 +816,47 @@
             consoleOutput.scrollTop = consoleOutput.scrollHeight;
         }
 
+        function displayPreview(previewData, note) {
+            if (!previewData || previewData.length === 0) return;
+
+            // Clear previous preview
+            previewTable.innerHTML = '';
+
+            // Create header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            const columns = Object.keys(previewData[0]);
+            
+            columns.forEach(col => {
+                const th = document.createElement('th');
+                th.textContent = col;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            previewTable.appendChild(thead);
+
+            // Create body
+            const tbody = document.createElement('tbody');
+            previewData.forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                columns.forEach(col => {
+                    const td = document.createElement('td');
+                    td.textContent = row[col] || '';
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            previewTable.appendChild(tbody);
+
+            // Show preview section
+            previewSection.classList.add('active');
+            
+            // Disable right-click and copy
+            previewSection.addEventListener('contextmenu', e => e.preventDefault());
+            previewSection.addEventListener('copy', e => e.preventDefault());
+            previewSection.addEventListener('cut', e => e.preventDefault());
+        }
+
         function displayDownloads(files) {
             downloadFiles.innerHTML = '';
             
@@ -678,23 +869,32 @@
                 
                 const name = document.createElement('div');
                 name.className = 'file-name';
-                name.textContent = file.filename;
+                name.textContent = '📄 ' + file.filename;
                 
                 const size = document.createElement('div');
                 size.className = 'file-size';
-                size.textContent = `${file.rows} rows`;
+                size.textContent = `${file.rows.toLocaleString()} rows • Sierra CRM format`;
                 
                 info.appendChild(name);
                 info.appendChild(size);
                 
                 const btn = document.createElement('button');
                 btn.className = 'download-btn';
-                btn.textContent = '⬇ Download';
-                btn.onclick = () => downloadFile(file.path);
+                btn.textContent = '⬇ Download CSV';
+                btn.onclick = () => {
+                    downloadFile(file.path);
+                    btn.textContent = '✓ Downloaded';
+                    btn.style.background = '#218838';
+                    setTimeout(() => {
+                        btn.textContent = '⬇ Download Again';
+                        btn.style.background = '#28a745';
+                    }, 2000);
+                };
                 
                 fileDiv.appendChild(info);
                 fileDiv.appendChild(btn);
                 downloadFiles.appendChild(fileDiv);
+            });
             });
         }
 

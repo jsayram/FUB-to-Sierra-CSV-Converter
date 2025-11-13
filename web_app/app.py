@@ -26,6 +26,7 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 
 # Payment link configuration
 PAYMENT_LINK = os.getenv('PAYMENT_LINK')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 
 # Ensure folders exist
 app.config['UPLOAD_FOLDER'].mkdir(exist_ok=True)
@@ -239,6 +240,10 @@ def upload_file():
         logs.append("=" * 60)
         logs.append(f"Total rows processed: {total_rows}")
         
+        # Generate preview (first 10 rows to show format)
+        preview_rows = sierra_rows[:10] if len(sierra_rows) > 10 else sierra_rows
+        preview_data = preview_rows  # Show full data to demonstrate format
+        
         # Split into chunks if needed
         num_chunks = (total_rows + SIERRA_MAX_ROWS - 1) // SIERRA_MAX_ROWS
         output_files = []
@@ -278,11 +283,16 @@ def upload_file():
         # Clean up upload file
         upload_path.unlink()
         
+        # Store session_id for payment verification
+        session['conversion_id'] = session_id
+        
         return jsonify({
             'success': True,
             'logs': logs,
             'files': output_files,
-            'total_rows': total_rows
+            'total_rows': total_rows,
+            'preview': preview_data,
+            'preview_note': f'Showing first {len(preview_data)} of {total_rows} rows - Preview demonstrates format only'
         })
     
     except Exception as e:
@@ -294,6 +304,52 @@ def upload_file():
             'details': error_details,
             'logs': logs if 'logs' in locals() else []
         })
+
+
+@app.route('/webhook', methods=['POST'])
+def stripe_webhook():
+    """Handle Stripe webhook for payment confirmation."""
+    import stripe
+    
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get('Stripe-Signature')
+    
+    try:
+        if STRIPE_WEBHOOK_SECRET:
+            # Verify webhook signature
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, STRIPE_WEBHOOK_SECRET
+            )
+        else:
+            # No webhook secret configured, parse JSON directly
+            import json
+            event = json.loads(payload)
+        
+        # Handle successful payment
+        if event['type'] == 'checkout.session.completed':
+            checkout_session = event['data']['object']
+            session_id = checkout_session.get('id')
+            customer_email = checkout_session.get('customer_details', {}).get('email', 'Unknown')
+            amount = checkout_session.get('amount_total', 0) / 100
+            
+            print(f"✅ Payment successful!")
+            print(f"   Session ID: {session_id}")
+            print(f"   Customer: {customer_email}")
+            print(f"   Amount: ${amount:.2f}")
+            
+            # Here you could:
+            # - Store payment record in database
+            # - Send confirmation email
+            # - Mark files as paid for download
+        
+        return jsonify({'success': True}), 200
+    
+    except stripe.error.SignatureVerificationError as e:
+        print(f"⚠️ Webhook signature verification failed: {str(e)}")
+        return jsonify({'error': 'Invalid signature'}), 400
+    except Exception as e:
+        print(f"❌ Webhook error: {str(e)}")
+        return jsonify({'error': str(e)}), 400
 
 
 @app.route('/download/<path:filename>')
