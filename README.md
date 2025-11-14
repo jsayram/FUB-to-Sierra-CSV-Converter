@@ -219,6 +219,162 @@ Short Summary
 Add to Import Note
 ```
 
+---
+
+## 🚀 Production Deployment
+
+Ready to deploy your app to production? Follow this guide:
+
+### Prerequisites
+
+1. ✅ `.env` file configured with:
+   - `SECRET_KEY` - Random 64-character hex string
+   - `PAYMENT_LINK` - Your Stripe payment link (optional)
+   - `FLASK_DEBUG=false` - Production mode
+
+2. ✅ Test app locally first:
+   ```bash
+   python web_app/app.py
+   # Visit http://localhost:5001
+   # Upload a test CSV and verify conversion works
+   ```
+
+### Deploy to Railway.app (Recommended)
+
+**Why Railway?**
+- ✅ $5 free credit/month (enough for low traffic)
+- ✅ Custom domain with free SSL
+- ✅ No sleep/cold starts
+- ✅ Auto-deploy from GitHub
+- ✅ Deploy in 5 minutes
+
+**Step 1: Install Railway CLI**
+```bash
+npm i -g @railway/cli
+```
+
+**Step 2: Login**
+```bash
+railway login
+```
+
+**Step 3: Initialize Project**
+```bash
+railway init
+# Choose: Create new project
+# Name: fub-sierra-converter (or your choice)
+```
+
+**Step 4: Set Environment Variables**
+```bash
+# Copy your SECRET_KEY from web_app/.env
+railway variables set SECRET_KEY=your-secret-key-here
+
+# Add Stripe payment link (if using)
+railway variables set PAYMENT_LINK=your-stripe-link
+
+# Set production mode
+railway variables set FLASK_DEBUG=false
+```
+
+**Step 5: Deploy**
+```bash
+railway up
+```
+
+**Step 6: Open Your App**
+```bash
+railway open
+```
+
+**Step 7: Add Custom Domain (Optional)**
+```bash
+railway domain
+# Follow prompts to add yourdomain.com
+# Then add CNAME record at your DNS provider
+```
+
+**Complete Guide:** See `RAILWAY_DEPLOYMENT.md` for detailed instructions, troubleshooting, and custom domain setup.
+
+### Alternative Platforms
+
+**Fly.io (Free Tier):**
+- See `HEROKU_DEPLOYMENT.md` for Fly.io setup
+- Truly free tier with 256MB RAM
+- Great for testing
+
+**Render.com (Free with Sleep):**
+- Easy deployment from GitHub
+- Free tier sleeps after 15 min inactivity
+- Good for low-traffic sites
+
+**Cost Comparison:**
+
+| Platform | Free Tier | Always-On | Custom Domain |
+|----------|-----------|-----------|---------------|
+| Railway | $5 credit/mo | ✅ Yes | ✅ Free SSL |
+| Fly.io | ✅ 256MB RAM | ✅ Yes | ✅ Free SSL |
+| Render | ✅ 750hrs/mo | ❌ Sleeps | ✅ Free SSL |
+
+### Post-Deployment Checklist
+
+After deploying:
+
+1. ✅ **Test conversion** - Upload a CSV and verify it works
+2. ✅ **Test payment flow** - Click payment link, verify redirect works
+3. ✅ **Check file cleanup** - Upload file, click "Convert Another File", verify files deleted
+4. ✅ **Monitor logs** - Check for errors (`railway logs` or platform dashboard)
+5. ✅ **Add custom domain** - If you have one
+6. ✅ **Update Stripe** - Switch from test mode to live mode when ready
+7. ✅ **Set up monitoring** - Check usage/costs weekly
+
+### Production Features
+
+Your app includes:
+
+- ✅ **Automatic file cleanup** - Files deleted after 1 hour or on session reset
+- ✅ **Session security** - Cryptographically signed with SECRET_KEY
+- ✅ **Payment integration** - Stripe payment links (optional)
+- ✅ **Error logging** - Rotating logs in `logs/` directory
+- ✅ **Health endpoint** - `/health` for monitoring
+- ✅ **No data retention** - Privacy-focused, session-only storage
+- ✅ **Large file support** - Handles 50k+ rows with chunking
+- ✅ **Concurrent users** - 4-8 users simultaneously (free tier)
+
+### Scaling Guide
+
+**As traffic grows:**
+
+```bash
+# Railway: Scale workers
+railway variables set WORKERS=6
+
+# Or upgrade memory
+# Settings → Resources → Increase RAM
+```
+
+**For 100+ concurrent users:**
+- See queuing system setup in conversation history
+- Requires Celery + Redis
+- Cost: ~$10-15/month
+
+### Security Notes
+
+🔒 **Your app is production-ready with:**
+- Environment-based configuration
+- Secure session handling
+- No database (privacy-focused)
+- Automatic file cleanup
+- HTTPS enforced (on Railway/Fly/Render)
+
+⚠️ **Remember to:**
+- Never commit `.env` to git
+- Rotate `SECRET_KEY` every 6-12 months
+- Use Stripe live mode only when ready
+- Monitor usage to avoid unexpected costs
+
+---
+
 ## 🔧 Features Explained
 
 ### Phone Normalization
