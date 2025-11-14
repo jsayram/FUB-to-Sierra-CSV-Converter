@@ -777,8 +777,9 @@ body {
     margin: 8px 0 0 0;
     line-height: 1.6;
     font-size: 0.9375rem;
-    opacity: 0.92;
     font-weight: 400;
+    color: #000000;
+    opacity: 0.85;
 }
 
 [data-theme="light"] .preview-warning-box {
@@ -787,7 +788,8 @@ body {
 }
 
 [data-theme="light"] .preview-warning-box p {
-    opacity: 0.95;
+    color: #000000;
+    opacity: 0.9;
 }
 
 .session-warning-box {
