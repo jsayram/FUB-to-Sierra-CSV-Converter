@@ -76,14 +76,14 @@ Or create from Railway dashboard:
 ### Step 5: Set Environment Variables
 
 ```bash
-# Set SECRET_KEY
-railway variables set SECRET_KEY=4b503fd1304b7dd31ae5e94b23657b08c2df550e3be8c71780db125fd940fed0
+# Set SECRET_KEY (get from your .env file - do NOT commit this!)
+railway variables set SECRET_KEY=your_secret_key_from_env_file
 
-# Set Stripe payment link
-railway variables set PAYMENT_LINK=https://buy.stripe.com/test_cNi3cxfeTbvk4Ru23F1VK00
+# Set Stripe payment link (get from your .env file)
+railway variables set PAYMENT_LINK=your_stripe_payment_link
 
-# Set Stripe webhook secret
-railway variables set STRIPE_WEBHOOK_SECRET=whsec_95bcYJmQllp83suQ1TGqD36x2VESrPuo
+# Set Stripe webhook secret (get from Stripe dashboard)
+railway variables set STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 
 # Set debug mode to false
 railway variables set FLASK_DEBUG=false
