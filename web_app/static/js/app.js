@@ -53,6 +53,7 @@ const cancelWarningBtn = document.getElementById('cancelWarningBtn');
 const confirmWarningBtn = document.getElementById('confirmWarningBtn');
 const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
 const finalConfirmBtn = document.getElementById('finalConfirmBtn');
+const paymentCard = document.getElementById('paymentCard');
 
 // State
 let currentFile = null;
@@ -157,9 +158,12 @@ function buildMappingUI() {
     // Clear all containers
     Object.values(containers).forEach(container => container.innerHTML = '');
 
-    // Build mapping rows
+    // Build mapping rows - only for columns detected in the CSV
     for (const [key, defaultValue] of Object.entries(window.defaultMapping)) {
         const found = detectedColumns.includes(defaultValue);
+        
+        // Only show this mapping if the column was detected in the CSV
+        if (!found) continue;
         
         const row = document.createElement('div');
         row.className = 'mapping-row';
@@ -167,7 +171,7 @@ function buildMappingUI() {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `map_${key}`;
-        checkbox.checked = found;
+        checkbox.checked = true; // Auto-check since it was found
         
         const label = document.createElement('label');
         label.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -323,6 +327,13 @@ function displayPreview(previewData, note) {
 function displayDownloads(files) {
     downloadFiles.innerHTML = '';
     
+    // Show download section and payment card when files are ready
+    downloadSection.classList.remove('hidden');
+    downloadSection.classList.add('active');
+    if (paymentCard) {
+        paymentCard.style.display = 'block';
+    }
+    
     // ZIP download for multiple files
     if (files.length > 1) {
         const zipDiv = document.createElement('div');
@@ -456,7 +467,11 @@ function resetToInitialState() {
     consoleSection.classList.add('hidden');
     previewSection.classList.remove('active');
     downloadSection.classList.remove('active');
+    downloadSection.classList.add('hidden');
     paymentNoticeInline.style.display = 'none';
+    if (paymentCard) {
+        paymentCard.style.display = 'none';
+    }
     consoleOutput.innerHTML = '';
     previewTable.innerHTML = '';
     downloadFiles.innerHTML = '';
@@ -523,6 +538,9 @@ if (urlParams.get('payment_success') === 'true') {
                 displayDownloads(data.files);
                 downloadSection.classList.add('active');
                 paymentNoticeInline.style.display = 'none';
+                if (paymentCard) {
+                    paymentCard.style.display = 'none';
+                }
                 disableUpload();
                 downloadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
@@ -543,6 +561,9 @@ if (urlParams.get('payment_success') === 'true') {
                 downloadSection.classList.add('active');
                 addConsoleLog('👋 Welcome back! Your files are ready to download.', 'success');
                 consoleSection.classList.remove('hidden');
+                if (paymentCard) {
+                    paymentCard.style.display = 'none';
+                }
                 disableUpload();
             }
         })
