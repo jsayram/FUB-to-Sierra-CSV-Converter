@@ -5,9 +5,9 @@
 // Theme Management
 // =====================
 
-// Initialize theme from localStorage or default to light
+// Initialize theme from localStorage or default to dark
 const initTheme = () => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
 };
@@ -25,7 +25,7 @@ const toggleTheme = () => {
 const updateThemeIcon = (theme) => {
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
-        themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
 };
 
@@ -179,24 +179,42 @@ function buildMappingUI() {
         const row = document.createElement('div');
         row.className = 'mapping-row';
         
+        // Create custom checkbox with material design
+        const checkboxWrapper = document.createElement('label');
+        checkboxWrapper.className = 'custom-checkbox';
+        
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `map_${key}`;
         checkbox.checked = true; // Auto-check since it was found
         
+        const checkboxVisual = document.createElement('span');
+        checkboxVisual.className = 'checkbox-visual';
+        
+        checkboxWrapper.appendChild(checkbox);
+        checkboxWrapper.appendChild(checkboxVisual);
+        
         const label = document.createElement('label');
+        label.className = 'mapping-label';
         label.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         label.setAttribute('for', `map_${key}`);
         
+        const inputWrapper = document.createElement('div');
+        inputWrapper.className = 'input-wrapper';
+        
         const input = document.createElement('input');
         input.type = 'text';
+        input.className = 'mapping-input';
         input.id = `val_${key}`;
         input.value = defaultValue;
         input.placeholder = 'Column name in CSV';
+        input.readOnly = true; // Make read-only since it's auto-detected
         
-        row.appendChild(checkbox);
+        inputWrapper.appendChild(input);
+        
+        row.appendChild(checkboxWrapper);
         row.appendChild(label);
-        row.appendChild(input);
+        row.appendChild(inputWrapper);
         
         // Add to appropriate category
         for (const [groupName, groupKeys] of Object.entries(columnGroups)) {

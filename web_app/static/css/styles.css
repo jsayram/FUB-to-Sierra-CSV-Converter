@@ -29,6 +29,7 @@
     --accent-indigo: #5856d6;
     --accent-warning: #ffcc00;
     --accent-error: #ff3b30;
+    --accent-red: #ca6046;
     
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -51,10 +52,10 @@
     --bg-elevated: #1c1c1e;
     --bg-overlay: rgba(0, 0, 0, 0.7);
     
-    --text-primary: #f5f5f7;
-    --text-secondary: #a1a1a6;
-    --text-tertiary: #86868b;
-    --text-inverse: #1d1d1f;
+    --text-primary: #ffffff;
+    --text-secondary: #d1d1d6;
+    --text-tertiary: #48484a;
+    --text-inverse: #140225;
     
     --border-color: #424245;
     --border-light: #38383a;
@@ -68,6 +69,7 @@
     --accent-indigo: #5e5ce6;
     --accent-warning: #ffd60a;
     --accent-error: #ff453a;
+    --accent-red: #ff453a;
     
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -570,6 +572,81 @@ body {
     box-shadow: 0 2px 8px rgba(175, 82, 222, 0.2);
 }
 
+/* Mapping Row Styles - Material Design */
+.mapping-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    background: var(--bg-elevated);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    transition: all var(--transition-fast);
+    margin-bottom: 10px;
+}
+
+.mapping-row:hover {
+    border-color: var(--accent-purple);
+    box-shadow: 0 4px 12px rgba(175, 82, 222, 0.15);
+}
+
+.mapping-label {
+    flex: 0 0 180px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    user-select: none;
+}
+
+.input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.mapping-input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.9375rem;
+    font-family: inherit;
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-light);
+    border-radius: 10px;
+    transition: all var(--transition-fast);
+    outline: none;
+}
+
+.mapping-input:focus {
+    border-color: var(--accent-purple);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 0 4px rgba(175, 82, 222, 0.1);
+}
+
+.mapping-input:read-only {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+.mapping-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+[data-theme="dark"] .mapping-row {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .mapping-input {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .mapping-input:focus {
+    background: var(--bg-elevated);
+}
+
 .mapping-label {
     flex: 1;
     font-size: 0.9375rem;
@@ -683,6 +760,64 @@ body {
     top: 0;
     z-index: 5;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Theme-Aware Warning Boxes */
+.preview-warning-box {
+    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-indigo) 100%);
+    color: #ffffff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(175, 82, 222, 0.3);
+}
+
+.preview-warning-box p {
+    margin: 8px 0 0 0;
+    line-height: 1.6;
+    font-size: 0.9375rem;
+    opacity: 0.92;
+    font-weight: 400;
+}
+
+[data-theme="light"] .preview-warning-box {
+    background: linear-gradient(135deg, #0071e3 0%, #5ac8fa 100%);
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+}
+
+[data-theme="light"] .preview-warning-box p {
+    opacity: 0.95;
+}
+
+.session-warning-box {
+    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-indigo) 100%);
+    color: #ffffff;
+    padding: 20px 24px;
+    border-radius: 14px;
+    margin: 24px 0;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(175, 82, 222, 0.3);
+}
+
+[data-theme="light"] .session-warning-box {
+    background: linear-gradient(135deg, #0071e3 0%, #5ac8fa 100%);
+    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.3);
+}
+
+.preview-warning-text {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--accent-purple);
+    border-radius: 8px;
+}
+
+[data-theme="light"] .preview-warning-text {
+    border-left-color: var(--accent-blue);
 }
 
 /* ========== Loading Spinner ========== */
