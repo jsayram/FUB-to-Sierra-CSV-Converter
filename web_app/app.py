@@ -388,6 +388,70 @@ def write_sierra_csv(output_path, sierra_rows):
         writer.writerows(sierra_rows)
 
 
+def cleanup_session_files(session_id):
+    """Delete all files associated with a specific session ID."""
+    deleted_count = 0
+    deleted_size = 0
+    
+    # Delete from uploads folder
+    for file_path in app.config['UPLOAD_FOLDER'].glob(f"{session_id}_*"):
+        try:
+            file_size = file_path.stat().st_size
+            file_path.unlink()
+            deleted_count += 1
+            deleted_size += file_size
+            app.logger.info(f"Deleted upload: {file_path.name}")
+        except Exception as e:
+            app.logger.error(f"Error deleting upload {file_path}: {e}")
+    
+    # Delete from downloads folder
+    for file_path in app.config['DOWNLOAD_FOLDER'].glob(f"{session_id}_*"):
+        try:
+            file_size = file_path.stat().st_size
+            file_path.unlink()
+            deleted_count += 1
+            deleted_size += file_size
+            app.logger.info(f"Deleted download: {file_path.name}")
+        except Exception as e:
+            app.logger.error(f"Error deleting download {file_path}: {e}")
+    
+    if deleted_count > 0:
+        size_mb = deleted_size / (1024 * 1024)
+        app.logger.info(f"Session {session_id}: Deleted {deleted_count} files ({size_mb:.2f} MB)")
+    
+    return deleted_count
+
+
+def cleanup_old_files():
+    """Delete files older than 1 hour from uploads and downloads folders."""
+    from datetime import datetime, timedelta
+    
+    cutoff_time = datetime.now() - timedelta(hours=1)
+    deleted_count = 0
+    
+    for folder in [app.config['UPLOAD_FOLDER'], app.config['DOWNLOAD_FOLDER']]:
+        if not folder.exists():
+            continue
+            
+        for file_path in folder.glob('*'):
+            if not file_path.is_file():
+                continue
+                
+            try:
+                file_modified = datetime.fromtimestamp(file_path.stat().st_mtime)
+                if file_modified < cutoff_time:
+                    file_path.unlink()
+                    deleted_count += 1
+                    app.logger.info(f"Auto-deleted old file: {file_path.name}")
+            except Exception as e:
+                app.logger.error(f"Error auto-deleting {file_path}: {e}")
+    
+    if deleted_count > 0:
+        app.logger.info(f"Auto-cleanup: Removed {deleted_count} old files")
+    
+    return deleted_count
+
+
 @app.route('/health')
 def health_check():
     """Health check endpoint for monitoring."""
@@ -400,7 +464,10 @@ def health_check():
 
 @app.route('/')
 def index():
-    """Render the main page."""
+    """Render the main page and cleanup old files."""
+    # Auto-cleanup files older than 1 hour on every page load
+    cleanup_old_files()
+    
     return render_template('index.html', 
                          default_fub_cols=DEFAULT_FUB_COLS,
                          sierra_cols=SIERRA_COLS,
@@ -676,21 +743,24 @@ def mark_payment_complete():
 
 @app.route('/reset_session')
 def reset_session():
-    """Clear session data to start a new conversion."""
-    # Clear all session data
-    session.clear()
+    """Clear session data and immediately delete user files."""
+    try:
+        # Get session ID before clearing
+        session_id = session.get('conversion_id')
+        
+        # Delete all files for this session immediately
+        if session_id:
+            cleanup_session_files(session_id)
+            app.logger.info(f"Deleted all files for session: {session_id}")
+        
+        # Clear session data
+        session.clear()
+        
+        return jsonify({'success': True, 'message': 'Session reset and files deleted'})
     
-    # Clean up old download files if they exist
-    conversion_id = session.get('conversion_id')
-    if conversion_id:
-        download_folder = app.config['DOWNLOAD_FOLDER']
-        for file_path in download_folder.glob(f"{conversion_id}_*"):
-            try:
-                file_path.unlink()
-            except Exception as e:
-                print(f"Error deleting file {file_path}: {e}")
-    
-    return jsonify({'success': True, 'message': 'Session reset complete'})
+    except Exception as e:
+        app.logger.error(f"Reset session error: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.route('/detect_columns', methods=['POST'])
