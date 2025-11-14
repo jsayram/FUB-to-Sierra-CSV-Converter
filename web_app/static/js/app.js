@@ -1,5 +1,5 @@
 // FUB to Sierra Converter - Main JavaScript
-// Apple-Inspired UI Implementation with Dark/Light Mode
+// Professional UI Implementation with Dark/Light Mode
 
 // =====================
 // Theme Management

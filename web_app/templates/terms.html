@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms of Service | FUB to Sierra Converter</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/apple-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <div class="app-container">
@@ -52,7 +52,7 @@
                 <li>Automatic file chunking for large datasets</li>
                 <li>Column mapping and data transformation</li>
                 <li>Secure file preview</li>
-                <li>Temporary file storage for 31 days post-payment</li>
+                <li>Session-based file access (files available only during your active browser session)</li>
             </ul>
 
             <h2>3. Payment Terms</h2>
@@ -93,7 +93,7 @@
 
             <h3>4.3 File Downloads</h3>
             <p>
-                You are responsible for downloading your converted files within 31 days of payment completion. After this period, files will be permanently deleted from our servers, and no refunds will be issued for inability to access expired files.
+                You are responsible for downloading your converted files <strong>immediately during your active browser session</strong>. Files are NOT stored on our servers. Once you close your browser or navigate away, your files will be permanently lost, and no refunds will be issued.
             </p>
 
             <h3>4.4 Data Security</h3>
@@ -128,7 +128,7 @@
 
             <h2>8. Data Retention and Privacy</h2>
             <p>
-                Uploaded files and converted outputs are stored on our servers for 31 days after payment completion. After this period, all files are permanently deleted. For more details, please review our <a href="/privacy" style="color: var(--accent-blue);">Privacy Policy</a>.
+                <strong>We do NOT store any data on our servers.</strong> Uploaded files and converted outputs exist only in your active browser session. Files are processed in memory and made available for immediate download. Once your session ends (browser closed or navigated away), all data is permanently lost. For more details, please review our <a href="/privacy" style="color: var(--accent-blue);">Privacy Policy</a>.
             </p>
 
             <h2>9. Prohibited Uses</h2>
@@ -163,6 +163,8 @@
                     <li>You have read and understood these Terms of Service</li>
                     <li>You accept the NO REFUND policy without exception</li>
                     <li>You have reviewed the preview before payment</li>
+                    <li>You understand files are only available during your active session</li>
+                    <li>You will download files immediately and we store NO data on servers</li>
                     <li>All sales are FINAL</li>
                 </ul>
             </div>

@@ -360,7 +360,7 @@ def write_sierra_csv(output_path, sierra_rows):
 @app.route('/')
 def index():
     """Render the main page."""
-    return render_template('index_apple.html', 
+    return render_template('index.html', 
                          default_fub_cols=DEFAULT_FUB_COLS,
                          sierra_cols=SIERRA_COLS,
                          payment_link=PAYMENT_LINK)
