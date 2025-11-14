@@ -32,6 +32,40 @@ const updateThemeIcon = (theme) => {
 // Initialize theme on page load
 initTheme();
 
+// =====================
+// Session Management
+// =====================
+
+// Track if this is a fresh page load or reload
+// Set a flag on initial load and check on subsequent loads
+const sessionKey = 'fub_converter_session_active';
+const pageLoadTime = Date.now();
+
+// Check if there's an existing session that should be warned about
+const existingSession = sessionStorage.getItem(sessionKey);
+if (existingSession) {
+    const sessionData = JSON.parse(existingSession);
+    const timeDiff = pageLoadTime - sessionData.timestamp;
+    
+    // If session is less than 1 hour old and page was reloaded
+    if (timeDiff < 3600000 && performance.navigation && performance.navigation.type === 1) {
+        // This is a reload - clear the session
+        sessionStorage.clear();
+        localStorage.removeItem('convertedFiles');
+        
+        // Show a notification that session was cleared
+        setTimeout(() => {
+            showError('⚠️ Session Cleared: Your previous files were removed because you reloaded the page. Files are NOT stored on our servers. Please upload and convert again.');
+        }, 500);
+    }
+}
+
+// Set new session marker
+sessionStorage.setItem(sessionKey, JSON.stringify({ 
+    timestamp: pageLoadTime,
+    active: true 
+}));
+
 // DOM Elements
 const uploadZone = document.getElementById('uploadZone');
 const fileInput = document.getElementById('fileInput');
@@ -460,42 +494,33 @@ function displayDownloads(files) {
     // ZIP download for multiple files
     if (files.length > 1) {
         const zipDiv = document.createElement('div');
-        zipDiv.className = 'download-file';
-        zipDiv.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        zipDiv.style.color = 'white';
-        zipDiv.style.border = 'none';
+        zipDiv.className = 'download-file zip-download';
         
         const info = document.createElement('div');
         info.className = 'file-info';
         
         const name = document.createElement('div');
         name.className = 'file-name';
-        name.textContent = '📦 All Files (ZIP Archive)';
-        name.style.color = 'white';
+        name.innerHTML = '<span style="font-size: 1.5rem;">📦</span> All Files (ZIP Archive)';
         
         const size = document.createElement('div');
         size.className = 'file-size';
         const totalRows = files.reduce((sum, f) => sum + f.rows, 0);
         size.textContent = `${files.length} files • ${totalRows.toLocaleString()} total rows`;
-        size.style.color = '#e0e7ff';
         
         info.appendChild(name);
         info.appendChild(size);
         
         const btn = document.createElement('button');
         btn.className = 'download-btn';
-        btn.textContent = '⬇ Download ZIP';
-        btn.style.background = 'white';
-        btn.style.color = '#667eea';
+        btn.innerHTML = '<span style="font-size: 1.125rem;">⬇️</span> Download ZIP';
         btn.onclick = () => {
             downloadZip();
-            btn.textContent = '✓ Downloaded';
-            btn.style.background = '#d1fae5';
-            btn.style.color = '#065f46';
+            btn.innerHTML = '<span style="font-size: 1.125rem;">✓</span> Downloaded';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
             setTimeout(() => {
-                btn.textContent = '⬇ Download Again';
-                btn.style.background = 'white';
-                btn.style.color = '#667eea';
+                btn.innerHTML = '<span style="font-size: 1.125rem;">⬇️</span> Download Again';
+                btn.style.background = '';
             }, 2000);
         };
         
@@ -504,10 +529,7 @@ function displayDownloads(files) {
         downloadFiles.appendChild(zipDiv);
         
         const separator = document.createElement('div');
-        separator.style.textAlign = 'center';
-        separator.style.margin = '15px 0';
-        separator.style.color = '#9ca3af';
-        separator.style.fontSize = '14px';
+        separator.className = 'download-separator';
         separator.textContent = '─── or download individually ───';
         downloadFiles.appendChild(separator);
     }
@@ -522,7 +544,7 @@ function displayDownloads(files) {
         
         const name = document.createElement('div');
         name.className = 'file-name';
-        name.textContent = '📄 ' + file.filename;
+        name.innerHTML = '<span style="font-size: 1.25rem;">📄</span> ' + file.filename;
         
         const size = document.createElement('div');
         size.className = 'file-size';
@@ -533,14 +555,14 @@ function displayDownloads(files) {
         
         const btn = document.createElement('button');
         btn.className = 'download-btn';
-        btn.textContent = '⬇ Download CSV';
+        btn.innerHTML = '<span style="font-size: 1.125rem;">⬇️</span> Download CSV';
         btn.onclick = () => {
             downloadFile(file.path);
-            btn.textContent = '✓ Downloaded';
-            btn.style.background = '#218838';
+            btn.innerHTML = '<span style="font-size: 1.125rem;">✓</span> Downloaded';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
             setTimeout(() => {
-                btn.textContent = '⬇ Download Again';
-                btn.style.background = '#4caf50';
+                btn.innerHTML = '<span style="font-size: 1.125rem;">⬇️</span> Download Again';
+                btn.style.background = '';
             }, 2000);
         };
         
@@ -563,12 +585,20 @@ function downloadZip() {
 // ====================
 
 function showError(message) {
-    errorMessage.textContent = message;
+    errorMessage.innerHTML = `
+        <span style="flex: 1;">${message}</span>
+        <button onclick="hideError()" style="background: none; border: none; color: inherit; cursor: pointer; font-size: 1.25rem; padding: 0 8px; margin-left: 12px; opacity: 0.8; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">✕</button>
+    `;
+    errorMessage.style.display = 'flex';
+    errorMessage.style.alignItems = 'center';
     errorMessage.classList.add('active');
 }
 
 function hideError() {
     errorMessage.classList.remove('active');
+    setTimeout(() => {
+        errorMessage.innerHTML = '';
+    }, 300);
 }
 
 function disableUpload() {
@@ -761,30 +791,54 @@ if (previewModal) {
 // Modal Workflow
 // ====================
 
-convertAnotherBtn.addEventListener('click', () => {
-    warningModal.style.display = 'flex';
-});
+if (convertAnotherBtn) {
+    convertAnotherBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (warningModal) {
+            warningModal.style.display = 'flex';
+            setTimeout(() => warningModal.classList.add('active'), 10);
+        }
+    });
+}
 
-cancelWarningBtn.addEventListener('click', () => {
-    warningModal.style.display = 'none';
-});
+if (cancelWarningBtn) {
+    cancelWarningBtn.addEventListener('click', () => {
+        warningModal.classList.remove('active');
+        setTimeout(() => warningModal.style.display = 'none', 300);
+    });
+}
 
-confirmWarningBtn.addEventListener('click', () => {
-    warningModal.style.display = 'none';
-    confirmModal.style.display = 'flex';
-});
+if (confirmWarningBtn) {
+    confirmWarningBtn.addEventListener('click', () => {
+        warningModal.classList.remove('active');
+        setTimeout(() => {
+            warningModal.style.display = 'none';
+            confirmModal.style.display = 'flex';
+            setTimeout(() => confirmModal.classList.add('active'), 10);
+        }, 300);
+    });
+}
 
-cancelConfirmBtn.addEventListener('click', () => {
-    confirmModal.style.display = 'none';
-});
+if (cancelConfirmBtn) {
+    cancelConfirmBtn.addEventListener('click', () => {
+        confirmModal.classList.remove('active');
+        setTimeout(() => confirmModal.style.display = 'none', 300);
+    });
+}
 
-finalConfirmBtn.addEventListener('click', () => {
-    confirmModal.style.display = 'none';
-    resetToInitialState();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    addConsoleLog('✅ Ready for new conversion! Upload your FUB CSV file above.', 'success');
-    consoleSection.classList.remove('hidden');
-});
+if (finalConfirmBtn) {
+    finalConfirmBtn.addEventListener('click', () => {
+        confirmModal.classList.remove('active');
+        setTimeout(() => {
+            confirmModal.style.display = 'none';
+            resetToInitialState();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            addConsoleLog('✅ Ready for new conversion! Upload your FUB CSV file above.', 'success');
+            consoleSection.classList.remove('hidden');
+        }, 300);
+    });
+}
 
 // ====================
 // Payment Verification
@@ -856,8 +910,8 @@ window.addEventListener('beforeunload', (event) => {
     
     if (downloadVisible || previewVisible || hasActiveFiles) {
         event.preventDefault();
-        event.returnValue = ''; // Modern browsers require this
-        return ''; // Some browsers show this message
+        event.returnValue = 'You have converted files that will be lost if you leave this page. Files are NOT stored on our servers. Have you downloaded everything?';
+        return 'You have converted files that will be lost if you leave this page. Files are NOT stored on our servers. Have you downloaded everything?';
     }
 });
 
