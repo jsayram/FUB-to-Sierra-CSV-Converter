@@ -376,6 +376,9 @@ function displayPreview(previewData, note, totalRows) {
         table.style.userSelect = 'none';
         table.style.webkitUserSelect = 'none';
         table.style.msUserSelect = 'none';
+        
+        // Make columns resizable
+        makeColumnsResizable(table);
     });
 
     // Show the preview section
@@ -389,6 +392,55 @@ function displayPreview(previewData, note, totalRows) {
     
     // Scroll to preview section
     previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Make table columns resizable
+function makeColumnsResizable(table) {
+    const headers = table.querySelectorAll('th');
+    headers.forEach((th, index) => {
+        const resizer = document.createElement('div');
+        resizer.style.position = 'absolute';
+        resizer.style.right = '0';
+        resizer.style.top = '0';
+        resizer.style.bottom = '0';
+        resizer.style.width = '8px';
+        resizer.style.cursor = 'col-resize';
+        resizer.style.userSelect = 'none';
+        resizer.style.zIndex = '1';
+        
+        th.style.position = 'relative';
+        th.appendChild(resizer);
+        
+        let startX, startWidth;
+        
+        resizer.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            startX = e.pageX;
+            startWidth = th.offsetWidth;
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            
+            resizer.style.background = 'var(--accent-purple)';
+            resizer.style.opacity = '0.5';
+        });
+        
+        function onMouseMove(e) {
+            const width = startWidth + (e.pageX - startX);
+            if (width >= 50) {
+                th.style.width = width + 'px';
+                th.style.minWidth = width + 'px';
+            }
+        }
+        
+        function onMouseUp() {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            resizer.style.background = '';
+            resizer.style.opacity = '';
+        }
+    });
 }
 
 // ====================

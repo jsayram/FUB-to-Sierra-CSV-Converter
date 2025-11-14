@@ -684,6 +684,9 @@ body {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    table-layout: auto;
+    width: max-content;
+    min-width: 100%;
 }
 
 .preview-table thead {
@@ -701,16 +704,46 @@ body {
     color: var(--text-primary);
     border-bottom: 2px solid var(--border-color);
     white-space: nowrap;
+    background: var(--bg-elevated);
+    position: relative;
+    resize: horizontal;
+    overflow: auto;
+    min-width: fit-content;
+    width: auto;
+}
+
+.preview-table th::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    cursor: col-resize;
+    background: transparent;
+    transition: background 0.2s ease;
+}
+
+.preview-table th:hover::after {
+    background: var(--accent-purple);
+    opacity: 0.3;
 }
 
 .preview-table td {
     padding: 12px 16px;
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1.5px solid var(--border-color);
     color: var(--text-secondary);
+    max-width: none;
+    vertical-align: top;
+    word-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .preview-table tbody tr {
     transition: background var(--transition-fast);
+    border-bottom: 1.5px solid var(--border-color);
 }
 
 .preview-table tbody tr:hover {
@@ -790,6 +823,23 @@ body {
 [data-theme="light"] .preview-warning-box p {
     color: #000000;
     opacity: 0.9;
+}
+
+/* Modal sticky warning box */
+.modal-sticky-warning {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    margin-left: -24px;
+    margin-right: -24px;
+    margin-top: -24px;
+    padding: 16px 24px;
+    border-radius: 0;
+}
+
+#modalScrollContainer {
+    position: relative;
 }
 
 .session-warning-box {

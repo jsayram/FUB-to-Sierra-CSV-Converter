@@ -342,9 +342,25 @@ def convert_csv(input_path, fub_cols, log_callback=None):
             sierra_rows.append(sierra_row)
             
             if log_callback:
-                name = sierra_row['Full Name'] or '(No Name)'
-                email = sierra_row['Email'] or '(No Email)'
-                log_callback(f"Row {row_num}: {name} - {email}")
+                # Show all non-empty fields from the row
+                row_data = []
+                for col, value in sierra_row.items():
+                    if value and str(value).strip():
+                        # Truncate long values for readability
+                        display_value = str(value).strip()
+                        if len(display_value) > 50:
+                            display_value = display_value[:47] + '...'
+                        row_data.append(f"{col}: {display_value}")
+                
+                if row_data:
+                    # Show first 3 fields with data for concise logging
+                    preview = ' | '.join(row_data[:3])
+                    more_count = len(row_data) - 3
+                    if more_count > 0:
+                        preview += f" (+{more_count} more fields)"
+                    log_callback(f"Row {row_num}: {preview}")
+                else:
+                    log_callback(f"Row {row_num}: Empty row")
     
     return sierra_rows
 
@@ -415,6 +431,14 @@ def upload_file():
             logs.append(msg)
         
         logs.append(f"Processing: {filename}")
+        logs.append("=" * 60)
+        
+        # Log selected columns
+        selected_columns = [col for col, enabled in fub_cols.items() if enabled]
+        logs.append(f"Selected columns: {len(selected_columns)}")
+        logs.append("Columns included in conversion:")
+        for col in selected_columns:
+            logs.append(f"  • {col}")
         logs.append("=" * 60)
         
         sierra_rows = convert_csv(upload_path, fub_cols, log_message)
