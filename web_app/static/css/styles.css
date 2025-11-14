@@ -23,10 +23,12 @@
     
     --accent-blue: #0071e3;
     --accent-blue-hover: #0077ed;
-    --accent-green: #30d158;
-    --accent-orange: #ff9500;
-    --accent-red: #ff3b30;
-    --accent-purple: #bf5af2;
+    --accent-green: #34c759;
+    --accent-teal: #5ac8fa;
+    --accent-purple: #af52de;
+    --accent-indigo: #5856d6;
+    --accent-warning: #ffcc00;
+    --accent-error: #ff3b30;
     
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -60,10 +62,12 @@
     
     --accent-blue: #0a84ff;
     --accent-blue-hover: #409cff;
-    --accent-green: #30d158;
-    --accent-orange: #ff9f0a;
-    --accent-red: #ff453a;
+    --accent-green: #32d74b;
+    --accent-teal: #64d2ff;
     --accent-purple: #bf5af2;
+    --accent-indigo: #5e5ce6;
+    --accent-warning: #ffd60a;
+    --accent-error: #ff453a;
     
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -459,26 +463,39 @@ body {
 }
 
 .column-card {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-light);
-    border-radius: 14px;
+    background: var(--glass-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
     padding: 24px;
     transition: all var(--transition-smooth);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .column-card:hover {
-    border-color: var(--border-color);
-    box-shadow: var(--shadow-sm);
+    border-color: var(--accent-blue);
+    box-shadow: 0 4px 16px rgba(10, 132, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 .column-card h3 {
     font-size: 1.125rem;
     font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-primary);
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.column-card h3::before {
+    content: attr(data-icon);
+    -webkit-text-fill-color: initial;
+    background: none;
 }
 
 .column-mapping {
@@ -491,13 +508,15 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 8px;
-    border-radius: 8px;
-    transition: background var(--transition-fast);
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: all var(--transition-fast);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .mapping-item:hover {
-    background: var(--bg-secondary);
+    background: rgba(10, 132, 255, 0.08);
+    transform: translateX(2px);
 }
 
 /* Custom Checkbox (Apple Style) */
@@ -524,17 +543,21 @@ body {
     width: 22px;
     height: 22px;
     border: 2px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--bg-elevated);
+    border-radius: 7px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: all var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .custom-checkbox input[type="checkbox"]:checked ~ .checkbox-visual {
-    background: var(--accent-blue);
-    border-color: var(--accent-blue);
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(10, 132, 255, 0.3);
 }
 
 .checkbox-visual::after {
@@ -559,8 +582,10 @@ body {
 .mapping-label {
     flex: 1;
     font-size: 0.9375rem;
+    font-weight: 500;
     color: var(--text-primary);
     user-select: none;
+    letter-spacing: -0.01em;
 }
 
 /* ========== Preview Table ========== */
@@ -950,9 +975,11 @@ body {
     background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
     color: white;
     padding: 24px;
-    border-radius: 14px;
+    border-radius: 16px;
     text-align: center;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 24px rgba(10, 132, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .payment-notice h3 {
@@ -981,13 +1008,16 @@ body {
 
 /* ========== Error Message ========== */
 .error-message {
-    background: var(--accent-red);
+    background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
     color: white;
     padding: 16px 24px;
     border-radius: 12px;
     margin-bottom: 24px;
     display: none;
     animation: slideDown 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(88, 86, 214, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .error-message.active {
