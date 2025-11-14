@@ -83,7 +83,7 @@ railway variables set SECRET_KEY=your_secret_key_from_env_file
 railway variables set PAYMENT_LINK=your_stripe_payment_link
 
 # Set Stripe webhook secret (get from Stripe dashboard)
-railway variables set STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+railway variables set STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret 
 
 # Set debug mode to false
 railway variables set FLASK_DEBUG=false
