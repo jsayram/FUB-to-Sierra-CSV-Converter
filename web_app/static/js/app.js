@@ -45,6 +45,7 @@ const errorMessage = document.getElementById('errorMessage');
 const loading = document.getElementById('loading');
 const previewSection = document.getElementById('previewSection');
 const previewTable = document.getElementById('previewTable');
+const previewTableInline = document.getElementById('previewTableInline');
 const paymentNoticeInline = document.getElementById('paymentNoticeInline');
 const convertAnotherBtn = document.getElementById('convertAnotherBtn');
 const warningModal = document.getElementById('warningModal');
@@ -54,12 +55,22 @@ const confirmWarningBtn = document.getElementById('confirmWarningBtn');
 const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
 const finalConfirmBtn = document.getElementById('finalConfirmBtn');
 const paymentCard = document.getElementById('paymentCard');
+const previewModal = document.getElementById('previewModal');
+const openFullPreviewBtn = document.getElementById('openFullPreviewBtn');
+const closePreviewBtn = document.getElementById('closePreviewBtn');
+const zoomInBtn = document.getElementById('zoomIn');
+const zoomOutBtn = document.getElementById('zoomOut');
+const zoomResetBtn = document.getElementById('zoomReset');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const zoomLevelSpan = document.getElementById('zoomLevel');
+const previewTableContainer = document.getElementById('previewTableContainer');
 
 // State
 let currentFile = null;
 let detectedColumns = [];
 let convertedFiles = null;
 let isPaymentComplete = false;
+let currentZoom = 1.0;
 
 // Column Groups Configuration
 const columnGroups = {
@@ -215,6 +226,7 @@ async function processConversion() {
         consoleSection.classList.remove('hidden');
         downloadSection.classList.remove('active');
         paymentNoticeInline.style.display = 'none';
+        previewSection.style.display = 'none';
         previewSection.classList.remove('active');
         consoleOutput.innerHTML = '';
         convertBtn.disabled = true;
@@ -253,9 +265,9 @@ async function processConversion() {
             
             addConsoleLog('', 'info');
             addConsoleLog('✅ Conversion complete!', 'success');
-            addConsoleLog('💳 Review the preview below, then complete payment to download your files', 'info');
+            addConsoleLog('👁️ Click "View Data Preview" button below to review your converted data', 'info');
             
-            paymentNoticeInline.style.display = 'block';
+            // Payment notice will be shown in preview section by displayPreview
             previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
             showError(result.error + (result.details ? '\n\n' + result.details : ''));
@@ -287,37 +299,56 @@ function addConsoleLog(message, type = 'info') {
 function displayPreview(previewData, note) {
     if (!previewData || previewData.length === 0) return;
 
-    previewTable.innerHTML = '';
+    // Populate both inline preview and modal preview
+    [previewTableInline, previewTable].forEach(table => {
+        if (!table) return;
+        
+        table.innerHTML = '';
 
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    const columns = Object.keys(previewData[0]);
-    
-    columns.forEach(col => {
-        const th = document.createElement('th');
-        th.textContent = col;
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    previewTable.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-    previewData.forEach((row) => {
-        const tr = document.createElement('tr');
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        const columns = Object.keys(previewData[0]);
+        
         columns.forEach(col => {
-            const td = document.createElement('td');
-            td.textContent = row[col] || '';
-            tr.appendChild(td);
+            const th = document.createElement('th');
+            th.textContent = col;
+            headerRow.appendChild(th);
         });
-        tbody.appendChild(tr);
-    });
-    previewTable.appendChild(tbody);
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
 
+        const tbody = document.createElement('tbody');
+        previewData.forEach((row) => {
+            const tr = document.createElement('tr');
+            columns.forEach(col => {
+                const td = document.createElement('td');
+                td.textContent = row[col] || '';
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        
+        // Disable copy/paste/cut on preview tables
+        table.addEventListener('copy', e => e.preventDefault());
+        table.addEventListener('cut', e => e.preventDefault());
+        table.addEventListener('contextmenu', e => e.preventDefault());
+        table.style.userSelect = 'none';
+        table.style.webkitUserSelect = 'none';
+        table.style.msUserSelect = 'none';
+    });
+
+    // Show the preview section
+    previewSection.style.display = 'block';
     previewSection.classList.add('active');
     
-    previewSection.addEventListener('contextmenu', e => e.preventDefault());
-    previewSection.addEventListener('copy', e => e.preventDefault());
-    previewSection.addEventListener('cut', e => e.preventDefault());
+    // Ensure payment notice is visible in the preview section
+    if (paymentNoticeInline) {
+        paymentNoticeInline.style.display = 'block';
+    }
+    
+    // Scroll to preview section
+    previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ====================
@@ -465,15 +496,21 @@ function resetToInitialState() {
     enableUpload();
     mappingSection.classList.add('hidden');
     consoleSection.classList.add('hidden');
+    previewSection.style.display = 'none';
     previewSection.classList.remove('active');
     downloadSection.classList.remove('active');
     downloadSection.classList.add('hidden');
     paymentNoticeInline.style.display = 'none';
+    if (previewModal) {
+        previewModal.classList.remove('active');
+        previewModal.style.display = 'none';
+    }
     if (paymentCard) {
         paymentCard.style.display = 'none';
     }
     consoleOutput.innerHTML = '';
     previewTable.innerHTML = '';
+    previewTableInline.innerHTML = '';
     downloadFiles.innerHTML = '';
     
     currentFile = null;
@@ -486,6 +523,121 @@ function resetToInitialState() {
     fetch('/reset_session')
         .then(() => console.log('Session reset complete'))
         .catch(error => console.error('Error resetting session:', error));
+}
+
+// ====================
+// Preview Modal Controls
+// ====================
+
+if (openFullPreviewBtn) {
+    openFullPreviewBtn.addEventListener('click', () => {
+        if (previewModal) {
+            previewModal.style.display = 'flex';
+            // Use setTimeout to ensure display:flex is applied before adding active class
+            setTimeout(() => {
+                previewModal.classList.add('active');
+            }, 10);
+            currentZoom = 1.0;
+            updateZoom();
+        }
+    });
+}
+
+if (closePreviewBtn) {
+    closePreviewBtn.addEventListener('click', () => {
+        if (previewModal) {
+            previewModal.classList.remove('active');
+            setTimeout(() => {
+                previewModal.style.display = 'none';
+            }, 300); // Wait for fade out animation
+        }
+    });
+}
+
+if (zoomInBtn) {
+    zoomInBtn.addEventListener('click', () => {
+        currentZoom = Math.min(currentZoom + 0.1, 2.0);
+        updateZoom();
+    });
+}
+
+if (zoomOutBtn) {
+    zoomOutBtn.addEventListener('click', () => {
+        currentZoom = Math.max(currentZoom - 0.1, 0.5);
+        updateZoom();
+    });
+}
+
+if (zoomResetBtn) {
+    zoomResetBtn.addEventListener('click', () => {
+        currentZoom = 1.0;
+        updateZoom();
+    });
+}
+
+if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            // Enter fullscreen
+            const elem = previewModal;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        } else {
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    });
+}
+
+// Listen for fullscreen changes to update button text
+if (document.addEventListener) {
+    document.addEventListener('fullscreenchange', updateFullscreenButton);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+    document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+    document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+}
+
+function updateFullscreenButton() {
+    if (fullscreenBtn) {
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            fullscreenBtn.innerHTML = '⇲ Exit Fullscreen';
+        } else {
+            fullscreenBtn.innerHTML = '⇱ Fullscreen';
+        }
+    }
+}
+
+function updateZoom() {
+    if (previewTableContainer) {
+        previewTableContainer.style.transform = `scale(${currentZoom})`;
+        previewTableContainer.style.transformOrigin = 'top left';
+    }
+    if (zoomLevelSpan) {
+        zoomLevelSpan.textContent = `${Math.round(currentZoom * 100)}%`;
+    }
+}
+
+// Close modal when clicking outside
+if (previewModal) {
+    previewModal.addEventListener('click', (e) => {
+        if (e.target === previewModal) {
+            previewModal.classList.remove('active');
+            setTimeout(() => {
+                previewModal.style.display = 'none';
+            }, 300);
+        }
+    });
 }
 
 // ====================

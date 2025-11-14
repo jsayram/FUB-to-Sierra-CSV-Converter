@@ -423,8 +423,8 @@ def upload_file():
         logs.append("=" * 60)
         logs.append(f"Total rows processed: {total_rows}")
         
-        # Generate preview (first 10 rows to show format)
-        preview_rows = sierra_rows[:10] if len(sierra_rows) > 10 else sierra_rows
+        # Generate preview (first 100 rows to show format)
+        preview_rows = sierra_rows[:100] if len(sierra_rows) > 100 else sierra_rows
         preview_data = preview_rows  # Show full data to demonstrate format
         
         # Split into chunks if needed

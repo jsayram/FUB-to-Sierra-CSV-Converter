@@ -585,6 +585,10 @@ body {
     border-radius: 14px;
     padding: 24px;
     overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .preview-table-wrapper {
@@ -599,6 +603,10 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .preview-table thead {
@@ -648,6 +656,33 @@ body {
     opacity: 0.05;
     pointer-events: none;
     white-space: nowrap;
+}
+
+/* Preview Modal Specific Styles */
+#previewModal .modal-content {
+    background: var(--bg-primary);
+    border-radius: 16px;
+    box-shadow: var(--shadow-xl);
+}
+
+#previewTableContainer {
+    transition: transform 0.2s ease;
+    transform-origin: top left;
+}
+
+#previewModal .preview-table {
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-md);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#previewModal .preview-table th {
+    background: var(--bg-secondary);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ========== Loading Spinner ========== */

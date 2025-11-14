@@ -126,21 +126,16 @@
             </section>
 
             <!-- Preview Section -->
-            <section id="previewSection" class="card preview-section">
+            <section id="previewSection" class="card preview-section" style="display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
                     <div>
-                        <h2 class="headline-small" style="margin-bottom: 8px;">Data Preview</h2>
-                        <p class="caption">First rows of your converted data</p>
+                        <h2 class="headline-small" style="margin-bottom: 8px;">Data Preview (First 100 Rows)</h2>
+                        <p class="caption">Review your converted Sierra CRM data</p>
                     </div>
                     
-                    <!-- Payment Notice Inline -->
-                    <div id="paymentNoticeInline" class="payment-notice" style="display: none;">
-                        <h3>Ready to Download?</h3>
-                        <p style="margin: 8px 0 16px;">Complete payment to access your files</p>
-                        <a href="{{ payment_link }}" target="_blank" class="payment-link">
-                            Complete Payment
-                        </a>
-                    </div>
+                    <button id="openFullPreviewBtn" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+                        ⇱ View Fullscreen
+                    </button>
                 </div>
                 
                 <p class="body-medium" style="color: var(--text-secondary); margin-bottom: 20px;">
@@ -150,7 +145,7 @@
                 <div class="preview-container">
                     <div class="preview-watermark">
                         <div class="preview-table-wrapper">
-                            <table id="previewTable" class="preview-table"></table>
+                            <table id="previewTableInline" class="preview-table"></table>
                         </div>
                     </div>
                 </div>
@@ -158,6 +153,15 @@
                 <p class="caption" style="margin-top: 16px; text-align: center;">
                     💡 Scroll horizontally and vertically to see all columns and rows
                 </p>
+                
+                <!-- Payment Notice Inline -->
+                <div id="paymentNoticeInline" class="payment-notice" style="display: block; margin-top: 32px;">
+                    <h3>Ready to Download?</h3>
+                    <p style="margin: 8px 0 16px;">Complete payment to access your files</p>
+                    <a href="{{ payment_link }}" target="_blank" class="payment-link">
+                        Complete Payment
+                    </a>
+                </div>
             </section>
 
             <!-- Download Section -->
@@ -300,6 +304,60 @@
                     <button id="finalConfirmBtn" class="btn btn-danger">
                         DELETE and Start Over
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Modal -->
+        <div id="previewModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 95vw; width: 95vw; height: 90vh; display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                <!-- Modal Header -->
+                <div style="padding: 24px; border-bottom: 1px solid var(--divider); background: var(--bg-primary); position: sticky; top: 0; z-index: 10;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <h2 style="margin: 0; font-size: 1.5rem; font-weight: 600;">👁️ Data Preview</h2>
+                            <p style="margin: 8px 0 0 0; color: var(--text-secondary); font-size: 0.9375rem;">
+                                Showing first 100 rows of your converted Sierra CRM data
+                            </p>
+                        </div>
+                        <button id="closePreviewBtn" class="btn btn-outlined" style="min-width: 100px;">
+                            ✕ Close
+                        </button>
+                    </div>
+                    
+                    <!-- Zoom Controls -->
+                    <div style="display: flex; gap: 12px; align-items: center; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
+                        <span style="font-weight: 500; font-size: 0.9375rem;">Zoom:</span>
+                        <button id="zoomOut" class="btn btn-secondary" style="padding: 8px 16px; min-width: auto;">−</button>
+                        <span id="zoomLevel" style="min-width: 60px; text-align: center; font-weight: 600; font-size: 0.9375rem;">100%</span>
+                        <button id="zoomIn" class="btn btn-secondary" style="padding: 8px 16px; min-width: auto;">+</button>
+                        <button id="zoomReset" class="btn btn-secondary" style="padding: 8px 16px; margin-left: 8px;">Reset</button>
+                        <button id="fullscreenBtn" class="btn btn-secondary" style="padding: 8px 16px; margin-left: 8px;" title="Fullscreen">
+                            ⇱ Fullscreen
+                        </button>
+                        <div style="flex: 1;"></div>
+                        <span style="color: var(--text-secondary); font-size: 0.875rem;">💡 Scroll horizontally and vertically to explore all data</span>
+                    </div>
+                </div>
+                
+                <!-- Modal Body with Table -->
+                <div style="flex: 1; overflow: auto; padding: 24px; background: var(--bg-secondary);">
+                    <div style="background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-blue) 100%); color: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; font-weight: 500; box-shadow: 0 4px 12px rgba(90, 200, 250, 0.2);">
+                        <strong style="font-size: 1rem;">⚠️ PREVIEW ONLY</strong><br>
+                        <p style="margin: 6px 0 0 0; line-height: 1.5; font-size: 0.9375rem;">
+                            This is a preview to verify data format. Complete payment to download the full, high-quality CSV files with all rows.
+                        </p>
+                    </div>
+                    <div id="previewTableContainer" style="transition: transform 0.2s ease;">
+                        <table id="previewTable" class="preview-table"></table>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div style="padding: 20px 24px; border-top: 1px solid var(--divider); background: var(--bg-primary); text-align: center;">
+                    <a href="{{ payment_link }}" target="_blank" class="btn btn-primary" style="font-size: 1.125rem; padding: 14px 32px;">
+                        💳 Complete Payment & Download Full Files
+                    </a>
                 </div>
             </div>
         </div>
