@@ -607,6 +607,25 @@ def mark_payment_complete():
     return jsonify({'success': False})
 
 
+@app.route('/reset_session')
+def reset_session():
+    """Clear session data to start a new conversion."""
+    # Clear all session data
+    session.clear()
+    
+    # Clean up old download files if they exist
+    conversion_id = session.get('conversion_id')
+    if conversion_id:
+        download_folder = app.config['DOWNLOAD_FOLDER']
+        for file_path in download_folder.glob(f"{conversion_id}_*"):
+            try:
+                file_path.unlink()
+            except Exception as e:
+                print(f"Error deleting file {file_path}: {e}")
+    
+    return jsonify({'success': True, 'message': 'Session reset complete'})
+
+
 @app.route('/detect_columns', methods=['POST'])
 def detect_columns():
     """Detect columns in uploaded CSV file."""
