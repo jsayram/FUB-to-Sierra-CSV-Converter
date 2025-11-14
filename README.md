@@ -477,3 +477,4 @@ The easiest way to use this tool is through the web interface:
 **Access:** http://127.0.0.1:5001 (or http://localhost:5001)
 
 **Payment:** Configure a Stripe payment link in `web_app/.env` to charge $9.99 per conversion (see `STRIPE_SETUP.md`)
+# Last updated: Fri Nov 14 01:06:34 EST 2025
