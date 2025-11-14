@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Professional CSV converter for Follow Up Boss to Sierra CRM. Secure, fast, and reliable data conversion.">
-    <title>FUB to Sierra CSV Converter | Professional Data Conversion</title>
+    <title>FUB to Sierra Interactive CSV Converter | Professional Data Conversion</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
@@ -43,7 +43,7 @@
             <div class="hero-content">
                 <h1 class="headline-large hero-title">Transform Your FUB Data</h1>
                 <p class="hero-subtitle">
-                    Seamlessly convert Follow Up Boss exports to Sierra CRM format.<br>
+                    Seamlessly convert Follow Up Boss exports to Sierra Interactive CRM format.<br>
                     Instant processing. Immediate download. Zero data retention.
                 </p>
             </div>
@@ -159,13 +159,12 @@
                 </p>
                 
                 <!-- Payment Notice Inline -->
-                <div id="paymentNoticeInline" class="payment-notice" style="display: block; margin-top: 32px;">
-                    <h3>Ready to Download?</h3>
+                                <div id="paymentNoticeInline" class="payment-notice" style="display: block; margin-top: 32px;">
+                    <h3 style="margin: 0 0 8px;">🔒 Payment Required</h3>
                     <p style="margin: 8px 0 16px;">Complete payment to access your files</p>
-                    <a href="{{ payment_link }}" target="_blank" class="payment-link">
+                    <a href="{{ payment_link }}" class="payment-link">
                         Complete Payment
                     </a>
-                </div>
             </section>
 
             <!-- Download Section -->
@@ -182,7 +181,7 @@
                     <div style="font-size: 2rem; margin-bottom: 12px;">💳</div>
                     <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 8px;">Ready to Download?</h3>
                     <p style="font-size: 0.9375rem; margin-bottom: 16px; opacity: 0.95; line-height: 1.5;">Complete payment to access your converted files</p>
-                    <a href="{{ payment_link }}" target="_blank" class="payment-link" style="background: white; color: var(--accent-purple); padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-block; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: all 0.2s ease;">
+                    <a href="{{ payment_link }}" class="payment-link" style="background: white; color: var(--accent-purple); padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-block; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: all 0.2s ease;">
                         Complete Payment →
                     </a>
                 </div>
@@ -350,7 +349,7 @@
                 
                 <!-- Modal Footer -->
                 <div style="padding: 20px 24px; border-top: 1px solid var(--divider); background: var(--bg-primary); text-align: center;">
-                    <a href="{{ payment_link }}" target="_blank" class="btn btn-primary" style="font-size: 1.125rem; padding: 14px 32px;">
+                    <a href="{{ payment_link }}" class="btn btn-primary" style="font-size: 1.125rem; padding: 14px 32px;">
                         💳 Complete Payment & Download Full Files
                     </a>
                 </div>

@@ -43,28 +43,43 @@ const pageLoadTime = Date.now();
 
 // Check if there's an existing session that should be warned about
 const existingSession = sessionStorage.getItem(sessionKey);
+let shouldSkipSessionRestore = false; // Flag to prevent session restore after reload
+
 if (existingSession) {
     const sessionData = JSON.parse(existingSession);
     const timeDiff = pageLoadTime - sessionData.timestamp;
     
     // If session is less than 1 hour old and page was reloaded
     if (timeDiff < 3600000 && performance.navigation && performance.navigation.type === 1) {
-        // This is a reload - clear the session
-        sessionStorage.clear();
-        localStorage.removeItem('convertedFiles');
-        
-        // Show a notification that session was cleared
-        setTimeout(() => {
-            showError('⚠️ Session Cleared: Your previous files were removed because you reloaded the page. Files are NOT stored on our servers. Please upload and convert again.');
-        }, 500);
+        // Check if user had active files
+        if (sessionData.active && sessionData.hasFiles) {
+            // User confirmed the reload despite the beforeunload warning - clear everything
+            shouldSkipSessionRestore = true; // Skip the session restore code below
+            sessionStorage.clear();
+            localStorage.removeItem('convertedFiles');
+            
+            // Clear files on server side
+            fetch('/reset_session')
+                .then(() => console.log('Session and files cleared on reload'))
+                .catch(error => console.error('Error clearing session:', error));
+            
+            // Show a notification that session was cleared
+            setTimeout(() => {
+                showError('⚠️ Session Cleared: Your previous files were removed because you reloaded the page. Files are NOT stored on our servers. Please upload and convert again.');
+            }, 500);
+        }
     }
 }
 
 // Set new session marker
-sessionStorage.setItem(sessionKey, JSON.stringify({ 
-    timestamp: pageLoadTime,
-    active: true 
-}));
+function updateSessionStorage(hasFiles = false) {
+    sessionStorage.setItem(sessionKey, JSON.stringify({ 
+        timestamp: pageLoadTime,
+        active: true,
+        hasFiles: hasFiles
+    }));
+}
+updateSessionStorage(false);
 
 // DOM Elements
 const uploadZone = document.getElementById('uploadZone');
@@ -573,11 +588,53 @@ function displayDownloads(files) {
 }
 
 function downloadFile(path) {
+    isDownloading = true; // Set flag before download
+    showToast('📥 Downloading file...', 'info');
     window.location.href = `/download/${path}`;
+    // Reset flag after a short delay to allow download to start
+    setTimeout(() => {
+        isDownloading = false;
+        showToast('✅ Download started! Check your downloads folder.', 'success');
+    }, 500);
 }
 
 function downloadZip() {
+    isDownloading = true; // Set flag before download
+    showToast('📦 Preparing ZIP file...', 'info');
     window.location.href = '/download_zip';
+    // Reset flag after a short delay to allow download to start
+    setTimeout(() => {
+        isDownloading = false;
+        showToast('✅ ZIP download started! Check your downloads folder.', 'success');
+    }, 500);
+}
+
+// Helper function to show toast notifications
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: ${type === 'success' ? '#10b981' : type === 'info' ? '#3b82f6' : '#f59e0b'};
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        font-weight: 500;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 // ====================
@@ -615,6 +672,10 @@ function enableUpload() {
 }
 
 function resetToInitialState() {
+    // Clear active files flag
+    hasActiveFiles = false;
+    updateSessionStorage(false);
+    
     enableUpload();
     mappingSection.classList.add('hidden');
     consoleSection.classList.add('hidden');
@@ -643,7 +704,10 @@ function resetToInitialState() {
     uploadZone.querySelector('p').textContent = 'or click to browse';
     
     fetch('/reset_session')
-        .then(() => console.log('Session reset complete'))
+        .then(() => {
+            console.log('Session reset complete - all files deleted');
+            showToast('🗑️ All files deleted. Ready for new conversion.', 'success');
+        })
         .catch(error => console.error('Error resetting session:', error));
 }
 
@@ -875,7 +939,8 @@ if (urlParams.get('payment_success') === 'true') {
         });
     
     window.history.replaceState({}, document.title, window.location.pathname);
-} else {
+} else if (!shouldSkipSessionRestore) {
+    // Only restore session if we didn't just clear it from a reload
     fetch('/verify_payment')
         .then(response => response.json())
         .then(data => {
@@ -896,14 +961,21 @@ if (urlParams.get('payment_success') === 'true') {
 }
 
 // =====================
-// Navigation Protection
+// Page Navigation Protection
 // =====================
 
 // Track if user has active files/preview
 let hasActiveFiles = false;
+let isDownloading = false; // Flag to track intentional downloads
 
 // Warn user before leaving page if they have converted files
 window.addEventListener('beforeunload', (event) => {
+    // Don't warn if user is downloading files
+    if (isDownloading) {
+        isDownloading = false; // Reset flag
+        return;
+    }
+    
     // Check if user has files in download section or preview visible
     const downloadVisible = downloadSection && !downloadSection.classList.contains('hidden');
     const previewVisible = previewSection && previewSection.style.display !== 'none';
@@ -943,11 +1015,13 @@ window.history.pushState(null, document.title, window.location.href);
 const originalDisplayPreview = displayPreview;
 displayPreview = function(data, note, totalRows) {
     hasActiveFiles = true;
+    updateSessionStorage(true);
     return originalDisplayPreview.call(this, data, note, totalRows);
 };
 
 const originalDisplayDownloads = displayDownloads;
 displayDownloads = function(files) {
     hasActiveFiles = true;
+    updateSessionStorage(true);
     return originalDisplayDownloads.call(this, files);
 };
