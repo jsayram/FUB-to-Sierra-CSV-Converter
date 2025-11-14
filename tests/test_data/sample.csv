@@ -1,0 +1,5 @@
+First Name,Last Name,Email,Phone,City,State,Source,Tags,Notes
+John,Doe,john@example.com,5551234567,Austin,TX,Zillow,buyer; investor,Looking for investment properties in Austin area
+Jane,Smith,jane@example.com,(555) 987-6543,Dallas,TX,Realtor.com,seller,Wants to sell current home and upgrade
+Bob,Johnson,bob@example.com,555-111-2222,Houston,TX,Facebook,buyer; buyer; lead,First time home buyer - needs guidance
+Alice,Williams,alice@example.com,1-555-333-4444,San Antonio,TX,Referral,investor; commercial,Interested in commercial properties
