@@ -1,5 +1,36 @@
 // FUB to Sierra Converter - Main JavaScript
-// Material Design UI Implementation
+// Apple-Inspired UI Implementation with Dark/Light Mode
+
+// =====================
+// Theme Management
+// =====================
+
+// Initialize theme from localStorage or default to light
+const initTheme = () => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+};
+
+// Toggle between light and dark mode
+const toggleTheme = () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+};
+
+// Update theme toggle icon
+const updateThemeIcon = (theme) => {
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+};
+
+// Initialize theme on page load
+initTheme();
 
 // DOM Elements
 const uploadZone = document.getElementById('uploadZone');

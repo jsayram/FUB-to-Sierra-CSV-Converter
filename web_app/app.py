@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Flask Web Application for FUB to Sierra CSV Converter
-Provides a browser-based UI for converting Follow Up Boss exports to Sierra CRM format.
+Provides a browser-based UI for converting Follow Up Boss exports to Sierra Interactive CRM format.
 Includes Stripe payment integration.
 """
 
@@ -360,10 +360,28 @@ def write_sierra_csv(output_path, sierra_rows):
 @app.route('/')
 def index():
     """Render the main page."""
-    return render_template('index_material.html', 
+    return render_template('index_apple.html', 
                          default_fub_cols=DEFAULT_FUB_COLS,
                          sierra_cols=SIERRA_COLS,
                          payment_link=PAYMENT_LINK)
+
+
+@app.route('/terms')
+def terms():
+    """Render the Terms of Service page."""
+    return render_template('terms.html')
+
+
+@app.route('/privacy')
+def privacy():
+    """Render the Privacy Policy page."""
+    return render_template('privacy.html')
+
+
+@app.route('/refund-policy')
+def refund_policy():
+    """Render the Refund Policy page."""
+    return render_template('refund-policy.html')
 
 
 @app.route('/upload', methods=['POST'])

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional CSV converter for Follow Up Boss to Sierra CRM. Secure, fast, and reliable data conversion.">
+    <title>FUB to Sierra CSV Converter | Professional Data Conversion</title>
+    
+    <!-- Apple Theme CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/apple-theme.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Professional Header -->
+        <header class="site-header">
+            <nav class="nav-wrapper">
+                <div class="nav-content">
+                    <a href="/" class="site-logo">
+                        <span>🔄</span>
+                        <span>FUB Converter</span>
+                    </a>
+                    <ul class="nav-menu">
+                        <li><a href="/" class="nav-link active">Converter</a></li>
+                        <li><a href="/privacy" class="nav-link">Privacy</a></li>
+                        <li><a href="/terms" class="nav-link">Terms</a></li>
+                        <li><a href="/refund-policy" class="nav-link">Refund Policy</a></li>
+                        <li>
+                            <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark/light mode">
+                                🌙
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="headline-large hero-title">Transform Your FUB Data</h1>
+                <p class="hero-subtitle">
+                    Seamlessly convert Follow Up Boss exports to Sierra Interactive CRM format.<br>
+                    Automatic chunking, precise mapping, instant results.
+                </p>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message" role="alert"></div>
+
+            <!-- Upload Zone -->
+            <section class="apple-card">
+                <div id="uploadZone" class="upload-zone" role="button" tabindex="0" aria-label="Upload CSV file">
+                    <div class="upload-icon">📁</div>
+                    <h2>Drop your FUB CSV file here</h2>
+                    <p>or click to browse • Maximum 50MB</p>
+                    <input type="file" id="fileInput" accept=".csv" aria-label="File input">
+                </div>
+            </section>
+
+            <!-- Column Mapping Section -->
+            <section id="mappingSection" class="apple-card hidden">
+                <h2 class="headline-small">Column Mapping</h2>
+                <p class="body-large" style="margin-bottom: 32px;">
+                    Select the fields you want to include in your Sierra CRM export
+                </p>
+                
+                <div class="columns-grid">
+                    <div class="column-card">
+                        <h3>👤 Contact Information</h3>
+                        <div id="contactMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>📍 Location Details</h3>
+                        <div id="locationMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>📝 Notes & Tags</h3>
+                        <div id="notesMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>📅 Dates & Timeline</h3>
+                        <div id="datesMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>💼 Professional Info</h3>
+                        <div id="professionalMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>📱 Social Media</h3>
+                        <div id="socialMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>🏠 Property Search</h3>
+                        <div id="propertyMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>🏷️ MLS & Listings</h3>
+                        <div id="mlsMappings" class="column-mapping"></div>
+                    </div>
+                    <div class="column-card">
+                        <h3>⚙️ Custom Fields</h3>
+                        <div id="customMappings" class="column-mapping"></div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <button id="convertBtn" class="btn btn-primary">
+                        Convert to Sierra Format
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 20px; font-weight: 500;">Converting your file...</p>
+            </div>
+
+            <!-- Console Output -->
+            <section id="consoleSection" class="apple-card hidden">
+                <h2 class="headline-small">Conversion Log</h2>
+                <div id="consoleOutput" class="console-output"></div>
+            </section>
+
+            <!-- Preview Section -->
+            <section id="previewSection" class="apple-card preview-section">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
+                    <div>
+                        <h2 class="headline-small" style="margin-bottom: 8px;">Data Preview</h2>
+                        <p class="caption">First 10 rows of your converted data</p>
+                    </div>
+                    
+                    <!-- Payment Notice Inline -->
+                    <div id="paymentNoticeInline" class="payment-notice" style="display: none;">
+                        <h3>Ready to Download?</h3>
+                        <p style="margin: 8px 0 16px;">Complete payment to access your files</p>
+                        <a href="{{ payment_link }}" target="_blank" class="payment-link">
+                            Complete Payment
+                        </a>
+                    </div>
+                </div>
+                
+                <p class="body-medium" style="color: var(--text-secondary); margin-bottom: 20px;">
+                    ⚠️ This is a preview only. Complete payment to download the full, high-quality CSV files with all data.
+                </p>
+                
+                <div class="preview-container">
+                    <div class="preview-watermark">
+                        <div class="preview-table-wrapper">
+                            <table id="previewTable" class="preview-table"></table>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="caption" style="margin-top: 16px; text-align: center;">
+                    💡 Scroll horizontally and vertically to see all columns and rows
+                </p>
+            </section>
+
+            <!-- Download Section -->
+            <section id="downloadSection" class="apple-card glass">
+                <h2 class="headline-small text-success">✅ Files Ready for Download</h2>
+                <p class="body-large" style="margin-bottom: 32px;">
+                    Your conversion is complete! Download your Sierra CRM-formatted files below.
+                </p>
+                <div id="downloadFiles" class="download-files"></div>
+                <p class="caption" style="margin-top: 24px;">
+                    📥 Files are available for download for 31 days. Import directly into Sierra CRM.
+                </p>
+                <div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--divider); text-align: center;">
+                    <button id="convertAnotherBtn" class="btn btn-secondary">
+                        Convert Another File
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h4>Product</h4>
+                        <ul class="footer-links">
+                            <li><a href="/" class="footer-link">Converter Tool</a></li>
+                            <li><a href="/#features" class="footer-link">Features</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul class="footer-links">
+                            <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+                            <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+                            <li><a href="/refund-policy" class="footer-link">Refund Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Support</h4>
+                        <ul class="footer-links">
+                            <li><a href="mailto:support@example.com" class="footer-link">Contact Support</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>About</h4>
+                        <ul class="footer-links">
+                            <li><a href="/#" class="footer-link">How It Works</a></li>
+                            <li><a href="/#" class="footer-link">Security</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p class="footer-copyright">
+                        © 2025 FUB to Sierra Converter. All rights reserved.
+                    </p>
+                    <ul class="footer-legal">
+                        <li><a href="/privacy" class="footer-link">Privacy</a></li>
+                        <li><a href="/terms" class="footer-link">Terms</a></li>
+                        <li><a href="/refund-policy" class="footer-link">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Warning Modal -->
+        <div id="warningModal" class="modal">
+            <div class="modal-content">
+                <div style="text-align: center; margin-bottom: 24px; font-size: 64px;">⚠️</div>
+                <h2 style="color: var(--accent-red); text-align: center;">Warning: You Will Lose Your Files!</h2>
+                <p style="font-size: 1.0625rem; line-height: 1.7; margin: 24px 0;">
+                    Starting a new conversion will <strong>permanently delete</strong> your current download links.
+                </p>
+                <p style="font-size: 1.0625rem; line-height: 1.7; margin: 24px 0;">
+                    <strong>Have you downloaded all your files?</strong>
+                </p>
+                <div style="background: var(--bg-tertiary); border-left: 4px solid var(--accent-red); border-radius: 8px; padding: 20px; margin: 24px 0;">
+                    <p style="margin: 0; color: var(--accent-red); font-weight: 600;">
+                        ⚠️ This action cannot be undone!
+                    </p>
+                </div>
+                <div class="modal-actions">
+                    <button id="cancelWarningBtn" class="btn btn-outlined">
+                        Cancel - Keep Files
+                    </button>
+                    <button id="confirmWarningBtn" class="btn btn-danger">
+                        Yes, I Downloaded Everything
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Confirmation Modal -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <div style="text-align: center; margin-bottom: 24px; font-size: 64px;">🛑</div>
+                <h2 style="color: var(--accent-red); text-align: center;">Final Confirmation</h2>
+                <p style="font-size: 1.125rem; font-weight: 600; line-height: 1.7; margin: 24px 0; text-align: center;">
+                    Are you ABSOLUTELY SURE you want to start over?
+                </p>
+                <p style="font-size: 1.0625rem; line-height: 1.7; margin: 24px 0; color: var(--accent-red); text-align: center;">
+                    Your current files will be <strong>DELETED PERMANENTLY</strong>.
+                </p>
+                <div class="modal-actions">
+                    <button id="cancelConfirmBtn" class="btn btn-primary">
+                        No, Keep My Files
+                    </button>
+                    <button id="finalConfirmBtn" class="btn btn-danger">
+                        DELETE and Start Over
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pass Flask data to JavaScript -->
+    <script>
+        window.defaultMapping = {{ default_fub_cols | tojson }};
+    </script>
+    
+    <!-- Main Application Script -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
