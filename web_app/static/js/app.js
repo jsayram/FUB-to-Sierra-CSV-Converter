@@ -982,8 +982,8 @@ window.addEventListener('beforeunload', (event) => {
     
     if (downloadVisible || previewVisible || hasActiveFiles) {
         event.preventDefault();
-        event.returnValue = 'You have converted files that will be lost if you leave this page. Files are NOT stored on our servers. Have you downloaded everything?';
-        return 'You have converted files that will be lost if you leave this page. Files are NOT stored on our servers. Have you downloaded everything?';
+        event.returnValue = '⚠️ WARNING: Reloading this page will PERMANENTLY DELETE your converted files! Files are NOT stored on our servers. If you reload, you will need to upload and convert again. Are you sure?';
+        return '⚠️ WARNING: Reloading this page will PERMANENTLY DELETE your converted files! Files are NOT stored on our servers. If you reload, you will need to upload and convert again. Are you sure?';
     }
 });
 

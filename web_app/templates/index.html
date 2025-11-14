@@ -161,9 +161,9 @@
                 <!-- Payment Notice Inline -->
                                 <div id="paymentNoticeInline" class="payment-notice" style="display: block; margin-top: 32px;">
                     <h3 style="margin: 0 0 8px;">🔒 Payment Required</h3>
-                    <p style="margin: 8px 0 16px;">Complete payment to access your files</p>
-                    <a href="{{ payment_link }}" class="payment-link">
-                        Complete Payment
+                    <p style="margin: 8px 0 16px;">Complete payment to access your files. Payment opens in a new tab - keep this page open!</p>
+                    <a href="{{ payment_link }}" target="_blank" rel="noopener noreferrer" class="payment-link">
+                        Complete Payment in New Tab →
                     </a>
             </section>
 
@@ -180,9 +180,9 @@
                 <div id="paymentCard" style="display: none; background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-indigo) 100%); color: white; padding: 24px; border-radius: 16px; max-width: 420px; margin: 0 auto 32px; box-shadow: 0 8px 24px rgba(175, 82, 222, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); text-align: center;">
                     <div style="font-size: 2rem; margin-bottom: 12px;">💳</div>
                     <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 8px;">Ready to Download?</h3>
-                    <p style="font-size: 0.9375rem; margin-bottom: 16px; opacity: 0.95; line-height: 1.5;">Complete payment to access your converted files</p>
-                    <a href="{{ payment_link }}" class="payment-link" style="background: white; color: var(--accent-purple); padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-block; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: all 0.2s ease;">
-                        Complete Payment →
+                    <p style="font-size: 0.9375rem; margin-bottom: 16px; opacity: 0.95; line-height: 1.5;">Complete payment to access your converted files. Payment opens in a new tab - keep this page open!</p>
+                    <a href="{{ payment_link }}" target="_blank" rel="noopener noreferrer" class="payment-link" style="background: white; color: var(--accent-purple); padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-block; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: all 0.2s ease;">
+                        Complete Payment in New Tab →
                     </a>
                 </div>
                 
@@ -349,8 +349,9 @@
                 
                 <!-- Modal Footer -->
                 <div style="padding: 20px 24px; border-top: 1px solid var(--divider); background: var(--bg-primary); text-align: center;">
-                    <a href="{{ payment_link }}" class="btn btn-primary" style="font-size: 1.125rem; padding: 14px 32px;">
-                        💳 Complete Payment & Download Full Files
+                    <p style="margin-bottom: 12px; color: var(--text-secondary); font-size: 0.9rem;">Payment opens in a new tab - keep this page open to download your files after payment</p>
+                    <a href="{{ payment_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 1.125rem; padding: 14px 32px;">
+                        💳 Complete Payment in New Tab
                     </a>
                 </div>
             </div>
