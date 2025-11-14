@@ -4,6 +4,7 @@ __pycache__/
 web_app/uploads/
 web_app/downloads/
 *.log
+logs/
 .DS_Store
 
 # Environment variables

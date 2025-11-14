@@ -12,11 +12,13 @@ import uuid
 import zipfile
 import io
 import time
+import logging
 from pathlib import Path
 from textwrap import shorten
 from flask import Flask, render_template, request, jsonify, send_file, session
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from logging.handlers import RotatingFileHandler
 
 # Load environment variables
 load_dotenv()
@@ -27,6 +29,19 @@ app.config['UPLOAD_FOLDER'] = Path(__file__).parent / 'uploads'
 app.config['DOWNLOAD_FOLDER'] = Path(__file__).parent / 'downloads'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 31  # 31 days in seconds
+
+# Configure logging
+if not app.debug:
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/fub_converter.log', maxBytes=10240000, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('FUB Converter startup')
 
 # Payment link configuration
 PAYMENT_LINK = os.getenv('PAYMENT_LINK')
@@ -373,6 +388,16 @@ def write_sierra_csv(output_path, sierra_rows):
         writer.writerows(sierra_rows)
 
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for monitoring."""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'FUB to Sierra Converter',
+        'timestamp': time.time()
+    }), 200
+
+
 @app.route('/')
 def index():
     """Render the main page."""
@@ -698,4 +723,6 @@ def detect_columns():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    # For development only - use gunicorn for production
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    app.run(debug=debug_mode, host='0.0.0.0', port=5001)
