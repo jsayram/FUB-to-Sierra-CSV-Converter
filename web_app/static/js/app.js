@@ -275,7 +275,7 @@ async function processConversion() {
             }
 
             if (result.preview && result.preview.length > 0) {
-                displayPreview(result.preview, result.preview_note);
+                displayPreview(result.preview, result.preview_note, result.total_rows);
             }
 
             convertedFiles = result.files;
@@ -314,8 +314,30 @@ function addConsoleLog(message, type = 'info') {
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
 }
 
-function displayPreview(previewData, note) {
+function displayPreview(previewData, note, totalRows) {
     if (!previewData || previewData.length === 0) return;
+
+    // Update preview headers with dynamic row counts
+    const previewCount = previewData.length;
+    const totalRowsText = totalRows ? ` out of ${totalRows.toLocaleString()} Total` : '';
+    
+    // Update inline preview header
+    const inlineHeader = document.querySelector('#previewSection h2');
+    if (inlineHeader) {
+        inlineHeader.innerHTML = `Data Preview (First ${previewCount} Rows${totalRowsText})`;
+    }
+    
+    // Update modal preview header
+    const modalHeader = document.querySelector('#previewModal h2');
+    if (modalHeader) {
+        modalHeader.innerHTML = `👁️ Data Preview (First ${previewCount} Rows${totalRowsText})`;
+    }
+    
+    // Update modal subtitle
+    const modalSubtitle = document.querySelector('#previewModal h2 + p');
+    if (modalSubtitle) {
+        modalSubtitle.textContent = `Showing first ${previewCount} rows of your converted Sierra CRM data`;
+    }
 
     // Populate both inline preview and modal preview
     [previewTableInline, previewTable].forEach(table => {
@@ -618,12 +640,37 @@ if (fullscreenBtn) {
     });
 }
 
-// Listen for fullscreen changes to update button text
+// Listen for fullscreen changes to update button text and handle modal closure
 if (document.addEventListener) {
-    document.addEventListener('fullscreenchange', updateFullscreenButton);
-    document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-    document.addEventListener('mozfullscreenchange', updateFullscreenButton);
-    document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+}
+
+function handleFullscreenChange() {
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || 
+                         document.mozFullScreenElement || document.msFullscreenElement;
+    
+    // Update button text
+    if (fullscreenBtn) {
+        if (isFullscreen) {
+            fullscreenBtn.innerHTML = '⇲ Exit Fullscreen';
+        } else {
+            fullscreenBtn.innerHTML = '⇱ Fullscreen';
+        }
+    }
+    
+    // Gracefully close modal when user exits fullscreen (e.g., pressing ESC)
+    if (!isFullscreen && previewModal && previewModal.style.display === 'flex') {
+        // User exited fullscreen, close the modal gracefully
+        setTimeout(() => {
+            previewModal.classList.remove('active');
+            setTimeout(() => {
+                previewModal.style.display = 'none';
+            }, 300); // Match CSS transition duration
+        }, 100);
+    }
 }
 
 function updateFullscreenButton() {
@@ -741,3 +788,60 @@ if (urlParams.get('payment_success') === 'true') {
             console.log('No existing session');
         });
 }
+
+// =====================
+// Navigation Protection
+// =====================
+
+// Track if user has active files/preview
+let hasActiveFiles = false;
+
+// Warn user before leaving page if they have converted files
+window.addEventListener('beforeunload', (event) => {
+    // Check if user has files in download section or preview visible
+    const downloadVisible = downloadSection && !downloadSection.classList.contains('hidden');
+    const previewVisible = previewSection && previewSection.style.display !== 'none';
+    
+    if (downloadVisible || previewVisible || hasActiveFiles) {
+        event.preventDefault();
+        event.returnValue = ''; // Modern browsers require this
+        return ''; // Some browsers show this message
+    }
+});
+
+// Prevent accidental back navigation loss
+window.addEventListener('popstate', (event) => {
+    const downloadVisible = downloadSection && !downloadSection.classList.contains('hidden');
+    const previewVisible = previewSection && previewSection.style.display !== 'none';
+    
+    if (downloadVisible || previewVisible || hasActiveFiles) {
+        const confirmLeave = confirm(
+            '⚠️ WARNING: Going back will cause you to lose your converted files!\n\n' +
+            'Your files are only available during this session and are NOT stored on our servers.\n\n' +
+            'Have you downloaded all your files?\n\n' +
+            'Click "Cancel" to stay on this page.\n' +
+            'Click "OK" only if you have downloaded everything.'
+        );
+        
+        if (!confirmLeave) {
+            // Push state back to prevent navigation
+            window.history.pushState(null, document.title, window.location.href);
+        }
+    }
+});
+
+// Push initial state to enable popstate detection
+window.history.pushState(null, document.title, window.location.href);
+
+// Mark files as active when preview or downloads are shown
+const originalDisplayPreview = displayPreview;
+displayPreview = function(data, note, totalRows) {
+    hasActiveFiles = true;
+    return originalDisplayPreview.call(this, data, note, totalRows);
+};
+
+const originalDisplayDownloads = displayDownloads;
+displayDownloads = function(files) {
+    hasActiveFiles = true;
+    return originalDisplayDownloads.call(this, files);
+};
