@@ -147,6 +147,46 @@ DEFAULT_FUB_COLS = {
 SIERRA_MAX_ROWS = 5000
 
 
+def validate_csv_file(file_content):
+    """
+    Validate that the uploaded file is a valid CSV.
+    Returns (is_valid, error_message).
+    """
+    try:
+        # Check if content exists
+        if not file_content or len(file_content.strip()) == 0:
+            return False, "File is empty"
+        
+        # Try to parse as CSV
+        lines = file_content.splitlines()
+        if len(lines) < 2:
+            return False, "CSV file must have at least a header row and one data row"
+        
+        # Check for valid CSV structure
+        reader = csv.DictReader(lines)
+        headers = reader.fieldnames
+        
+        if not headers or len(headers) == 0:
+            return False, "CSV file has no headers"
+        
+        # Check that headers are not all empty
+        if all(not h or h.strip() == '' for h in headers):
+            return False, "CSV headers are empty"
+        
+        # Try to read first row to ensure it's parseable
+        try:
+            first_row = next(reader)
+        except StopIteration:
+            return False, "CSV file has headers but no data rows"
+        except csv.Error as e:
+            return False, f"CSV parsing error: {str(e)}"
+        
+        return True, None
+        
+    except Exception as e:
+        return False, f"Invalid CSV format: {str(e)}"
+
+
 def normalize_phone(phone_str):
     """Extract digits from phone string and format as (XXX) XXX-XXXX."""
     if not phone_str:
@@ -492,6 +532,25 @@ def refund_policy():
     return render_template('refund-policy.html')
 
 
+@app.errorhandler(404)
+def not_found_error(error):
+    """Handle 404 errors."""
+    return render_template('error_404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    """Handle 500 errors."""
+    app.logger.error(f'Server Error: {error}')
+    return render_template('error_500.html'), 500
+
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    """Handle file too large errors."""
+    return render_template('error_413.html'), 413
+
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     """Handle file upload and conversion."""
@@ -503,13 +562,32 @@ def upload_file():
         if file.filename == '':
             return jsonify({'success': False, 'error': 'No file selected'})
         
-        if not file.filename.endswith('.csv'):
-            return jsonify({'success': False, 'error': 'File must be a CSV'})
+        # Validate file extension
+        if not file.filename.lower().endswith('.csv'):
+            return jsonify({'success': False, 'error': 'File must be a CSV file (with .csv extension)'})
+        
+        # Read and validate file content
+        file.seek(0)
+        try:
+            file_content = file.read().decode('utf-8-sig')
+        except UnicodeDecodeError:
+            return jsonify({'success': False, 'error': 'File encoding is not valid UTF-8. Please save your CSV as UTF-8 encoded.'})
+        
+        # Validate CSV structure
+        is_valid, error_msg = validate_csv_file(file_content)
+        if not is_valid:
+            return jsonify({'success': False, 'error': error_msg})
+        
+        # Reset file pointer for later processing
+        file.seek(0)
         
         # Get column mapping from request
         column_mapping = request.form.get('column_mapping', '{}')
         import json
-        fub_cols = json.loads(column_mapping)
+        try:
+            fub_cols = json.loads(column_mapping)
+        except json.JSONDecodeError:
+            return jsonify({'success': False, 'error': 'Invalid column mapping data'})
         
         # Save uploaded file
         filename = secure_filename(file.filename)
@@ -772,23 +850,51 @@ def detect_columns():
         
         file = request.files['file']
         
-        # Read just the header
+        if not file.filename:
+            return jsonify({'success': False, 'error': 'No file selected'})
+        
+        # Validate file extension
+        if not file.filename.lower().endswith('.csv'):
+            return jsonify({'success': False, 'error': 'File must be a CSV file (with .csv extension)'})
+        
+        # Read and validate file content
         file.seek(0)
-        content = file.read().decode('utf-8-sig')
+        try:
+            content = file.read().decode('utf-8-sig')
+        except UnicodeDecodeError:
+            return jsonify({'success': False, 'error': 'File encoding is not valid UTF-8. Please save your CSV as UTF-8 encoded.'})
+        
         file.seek(0)
+        
+        # Validate CSV structure
+        is_valid, error_msg = validate_csv_file(content)
+        if not is_valid:
+            return jsonify({'success': False, 'error': error_msg})
         
         reader = csv.DictReader(content.splitlines())
         detected_columns = list(reader.fieldnames)
+        
+        # Filter out None and empty column names
+        detected_columns = [col for col in detected_columns if col and col.strip()]
+        
+        if not detected_columns:
+            return jsonify({'success': False, 'error': 'No valid columns detected in CSV file'})
         
         return jsonify({
             'success': True,
             'columns': detected_columns
         })
     
-    except Exception as e:
+    except csv.Error as e:
         return jsonify({
             'success': False,
-            'error': str(e)
+            'error': f'CSV parsing error: {str(e)}'
+        })
+    except Exception as e:
+        app.logger.error(f'Column detection error: {str(e)}')
+        return jsonify({
+            'success': False,
+            'error': 'Failed to detect columns. Please ensure your file is a valid CSV.'
         })
 
 

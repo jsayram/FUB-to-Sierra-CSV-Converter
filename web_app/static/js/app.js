@@ -165,8 +165,23 @@ fileInput.addEventListener('change', (e) => {
 });
 
 async function handleFileSelect(file) {
-    if (!file.name.endsWith('.csv')) {
-        showError('Please select a CSV file');
+    // Validate file extension
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+        showError('Please select a CSV file (with .csv extension)');
+        return;
+    }
+
+    // Validate file size (50MB limit)
+    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+    if (file.size > maxSize) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        showError(`File too large (${sizeMB} MB). Maximum size is 50 MB. Please split your CSV into smaller files.`);
+        return;
+    }
+
+    // Check if file is empty
+    if (file.size === 0) {
+        showError('The selected file is empty. Please choose a valid CSV file.');
         return;
     }
 

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error | FUB Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="site-header">
+            <nav class="nav-wrapper">
+                <div class="nav-content">
+                    <a href="/" class="site-logo">
+                        <span>🔄</span>
+                        <span>FUB Converter</span>
+                    </a>
+                    <ul class="nav-menu">
+                        <li><a href="/" class="nav-link">Converter</a></li>
+                        <li><a href="/privacy" class="nav-link">Privacy</a></li>
+                        <li>
+                            <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark/light mode">
+                                ☀️
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content" style="text-align: center; padding: 80px 20px;">
+            <div style="font-size: 120px; margin-bottom: 20px;">⚠️</div>
+            <h1 style="font-size: 3rem; margin-bottom: 16px; color: var(--text-primary);">500</h1>
+            <h2 style="font-size: 1.5rem; margin-bottom: 24px; color: var(--text-secondary);">Server Error</h2>
+            <p style="font-size: 1.125rem; margin-bottom: 40px; color: var(--text-secondary); max-width: 500px; margin-left: auto; margin-right: auto;">
+                Something went wrong on our end. We're working to fix it. Please try again in a few moments.
+            </p>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <a href="/" class="btn btn-primary" style="display: inline-block; text-decoration: none;">
+                    🏠 Go to Home
+                </a>
+                <button onclick="window.location.reload()" class="btn btn-secondary">
+                    🔄 Retry
+                </button>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-bottom">
+                    <p class="footer-copyright">
+                        © 2025 FUB to Sierra Converter. All rights reserved.
+                    </p>
+                    <ul class="footer-legal">
+                        <li><a href="/" class="footer-link">Converter</a></li>
+                        <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+                        <li><a href="/refund-policy" class="footer-link">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

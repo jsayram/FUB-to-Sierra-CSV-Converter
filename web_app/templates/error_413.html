@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>413 - File Too Large | FUB Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="site-header">
+            <nav class="nav-wrapper">
+                <div class="nav-content">
+                    <a href="/" class="site-logo">
+                        <span>🔄</span>
+                        <span>FUB Converter</span>
+                    </a>
+                    <ul class="nav-menu">
+                        <li><a href="/" class="nav-link">Converter</a></li>
+                        <li><a href="/privacy" class="nav-link">Privacy</a></li>
+                        <li>
+                            <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark/light mode">
+                                ☀️
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content" style="text-align: center; padding: 80px 20px;">
+            <div style="font-size: 120px; margin-bottom: 20px;">📁</div>
+            <h1 style="font-size: 3rem; margin-bottom: 16px; color: var(--text-primary);">413</h1>
+            <h2 style="font-size: 1.5rem; margin-bottom: 24px; color: var(--text-secondary);">File Too Large</h2>
+            <p style="font-size: 1.125rem; margin-bottom: 24px; color: var(--text-secondary); max-width: 600px; margin-left: auto; margin-right: auto;">
+                The file you're trying to upload exceeds our maximum size limit of <strong>50 MB</strong>.
+            </p>
+            <div style="background: var(--bg-secondary); border-radius: 12px; padding: 24px; max-width: 600px; margin: 0 auto 40px; text-align: left;">
+                <h3 style="margin-top: 0; color: var(--text-primary);">💡 Suggestions:</h3>
+                <ul style="color: var(--text-secondary); line-height: 1.8;">
+                    <li>Split your CSV file into smaller chunks before uploading</li>
+                    <li>Remove unnecessary columns from your export</li>
+                    <li>Compress your file if possible</li>
+                    <li>Contact support if you need to process larger files</li>
+                </ul>
+            </div>
+            <a href="/" class="btn btn-primary" style="display: inline-block; text-decoration: none;">
+                🏠 Go to Home
+            </a>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-bottom">
+                    <p class="footer-copyright">
+                        © 2025 FUB to Sierra Converter. All rights reserved.
+                    </p>
+                    <ul class="footer-legal">
+                        <li><a href="/" class="footer-link">Converter</a></li>
+                        <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+                        <li><a href="/refund-policy" class="footer-link">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
