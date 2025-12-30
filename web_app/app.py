@@ -696,16 +696,16 @@ def stripe_webhook():
     payload = request.get_data(as_text=True)
     sig_header = request.headers.get('Stripe-Signature')
     
+    # Webhook secret is required for security
+    if not STRIPE_WEBHOOK_SECRET:
+        app.logger.error("Webhook received but STRIPE_WEBHOOK_SECRET not configured")
+        return jsonify({'error': 'Webhook secret not configured'}), 500
+    
     try:
-        if STRIPE_WEBHOOK_SECRET:
-            # Verify webhook signature
-            event = stripe.Webhook.construct_event(
-                payload, sig_header, STRIPE_WEBHOOK_SECRET
-            )
-        else:
-            # No webhook secret configured, parse JSON directly
-            import json
-            event = json.loads(payload)
+        # Verify webhook signature
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, STRIPE_WEBHOOK_SECRET
+        )
         
         # Handle successful payment
         if event['type'] == 'checkout.session.completed':
